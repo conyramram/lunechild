@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Lunechild Photobooth</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%; height: 100dvh;
+  overflow: hidden; background: #1a1a1a;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  font-family: 'Press Start 2P', monospace;
+  image-rendering: pixelated;
+}
+
+.booth-screen {
+  position: absolute; inset: 0;
+  display: none; flex-direction: column;
+  align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.booth-screen.active {
+  display: flex;
+  animation: boothFadeIn 0.25s ease both;
+}
+@keyframes boothFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.booth-screen-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background-image: url('bg.png');
+  background-size: cover; background-position: center;
+  background-repeat: no-repeat; background-color: #1a1a1a;
+}
+.booth-screen-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background-size: cover; background-position: center top;
+  background-repeat: no-repeat; pointer-events: none;
+}
+
+#booth-home .booth-screen-overlay   { background-image: url('homepage.png'); background-size: cover; background-position: center; }
+#booth-frames .booth-screen-overlay { background-image: url('selectframe.png'); }
+#booth-name .booth-screen-overlay   { background-image: url('writename.png'); }
+#booth-message .booth-screen-overlay{ background-image: url('writeletter.png'); }
+#booth-result .booth-screen-overlay { background-image: url('result.png'); background-size: contain; background-position: top center; }
+
+/* ── Buttons ── */
+.b-pixel-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px; background: #f0f0f0; color: #1a1a1a;
+  border: none; outline: 3px solid #1a1a1a;
+  padding: 10px 18px; cursor: pointer;
+  box-shadow: 3px 3px 0 #000;
+  transition: transform 0.08s, box-shadow 0.08s;
+  position: relative; z-index: 10; letter-spacing: 0.02em;
+}
+.b-pixel-btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 #000; }
+.b-pixel-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; }
+.b-pixel-btn.pink { background: #f4a8c0; }
+.b-pixel-btn.pink:active { background: #e07898; }
+
+.b-pixel-input {
+  width: 100%; background: transparent; border: none;
+  padding: 10px 12px; font-family: 'Press Start 2P', monospace;
+  font-size: 9px; color: #111; outline: none; line-height: 1.8;
+}
+.b-pixel-input::placeholder { color: #aaa; }
+textarea.b-pixel-input { resize: none; min-height: 110px; }
+
+/* ── EXIT button ── */
+.btn-exit {
+  position: absolute; top: 14px; left: 14px; z-index: 20;
+  font-family: 'Press Start 2P', monospace; font-size: 7px;
+  background: rgba(0,0,0,0.45); color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.3); padding: 7px 12px;
+  cursor: pointer; letter-spacing: 0.05em;
+}
+
+/* ── Home screen ── */
+#booth-home .btn-enter-img {
+  position: absolute; z-index: 10;
+  top: 57.2%; left: 65.4%;
+  transform: translate(-50%, -50%);
+  height: 26px; width: auto;
+  cursor: pointer;
+  transition: transform 0.08s;
+}
+#booth-home .btn-enter-img:active { transform: translate(calc(-50% + 2px), calc(-50% + 2px)); }
+
+/* ── Frame selection ── */
+.b-frame-cards-row {
+  position: absolute; z-index: 10; left: 0; right: 0; top: 370px;
+  display: flex; justify-content: center; gap: 16px;
+}
+.b-frame-card {
+  cursor: pointer; border: 3px solid transparent;
+  transition: border-color 0.15s; overflow: hidden;
+  background: transparent; width: 86px; height: 160px; flex-shrink: 0;
+}
+.b-frame-card img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.b-frame-card.selected { border-color: #ffa9e9; }
+.b-frame-btn-row {
+  position: absolute; z-index: 10; bottom: 80px; left: 0; right: 0;
+  display: flex; gap: 12px; justify-content: center;
+}
+
+/* ── Camera ── */
+#booth-camera { background: #000; }
+#booth-camera-video {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  transform: scaleX(-1);
+}
+#booth-capture-canvas { display: none; }
+
+.b-cam-top {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 20;
+  padding: 18px 20px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.b-cam-label { font-size: 8px; color: rgba(255,255,255,0.7); letter-spacing: 0.08em; }
+.b-btn-cam-back {
+  font-family: 'Press Start 2P', monospace; font-size: 7px;
+  background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.3);
+  color: white; padding: 6px 12px; cursor: pointer;
+}
+
+#b-shot-counter {
+  position: absolute; top: 64px; left: 0; right: 0; z-index: 20;
+  display: flex; justify-content: center; gap: 12px;
+}
+.b-shot-dot {
+  width: 11px; height: 11px; border-radius: 50%;
+  background: rgba(255,255,255,0.2); border: 1.5px solid rgba(255,255,255,0.35);
+  transition: all 0.25s;
+}
+.b-shot-dot.taken   { background: #f4a8c0; border-color: #f4a8c0; }
+.b-shot-dot.current { background: white; border-color: white; transform: scale(1.3); }
+
+.b-cam-bottom {
+  position: relative; z-index: 20; width: 100%;
+  padding: 16px 20px 42px;
+  background: linear-gradient(to top, rgba(0,0,0,0.65), transparent);
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  margin-top: auto;
+}
+.b-cam-status { font-size: 8px; color: rgba(255,255,255,0.7); }
+
+#b-thumb-strip { display: flex; gap: 8px; }
+.b-thumb-slot {
+  width: 50px; height: 50px; background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.18); overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.b-thumb-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.b-thumb-empty { font-size: 18px; opacity: 0.2; font-family: sans-serif; }
+
+#b-btn-capture {
+  width: 68px; height: 68px; border-radius: 50%;
+  background: #f4a8c0; border: 5px solid rgba(255,255,255,0.3);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: transform 0.1s;
+}
+#b-btn-capture:active { transform: scale(0.88); }
+.b-sh-inner { width: 48px; height: 48px; border-radius: 50%; background: #ffd0e0; border: 3px solid #f4a8c0; }
+
+#b-countdown-overlay {
+  position: absolute; inset: 0; z-index: 40;
+  display: none; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.4);
+}
+#b-countdown-overlay.visible { display: flex; }
+#b-countdown-number {
+  font-size: 96px; color: white;
+  text-shadow: 4px 4px 0 #f4a8c0;
+}
+#b-flash-overlay {
+  position: absolute; inset: 0; z-index: 50;
+  background: white; opacity: 0; pointer-events: none;
+}
+@keyframes bFlashAnim { 0%{opacity:0} 15%{opacity:1} 100%{opacity:0} }
+#b-flash-overlay.flash { animation: bFlashAnim 0.4s ease forwards; }
+
+/* ── Name / Message inputs ── */
+#b-name-input-wrap {
+  position: absolute; z-index: 10; top: 46%; left: 17.8%; width: 70.5%;
+}
+#b-letter-input-wrap {
+  position: absolute; z-index: 10; top: 47.4%; left: 24.1%; width: 38.5%;
+}
+.b-input-btn-row {
+  position: absolute; z-index: 10; bottom: 60px; left: 0; right: 0;
+  display: flex; gap: 12px; justify-content: center;
+}
+
+/* ── Result ── */
+#booth-result { justify-content: flex-start; align-items: flex-start; }
+.b-r-overlay { position: absolute; z-index: 10; pointer-events: none; }
+#b-r-message {
+  left: 30.8%; top: 40%; width: 37.2%; height: 26%;
+  font-family: 'Special Elite', serif; font-size: clamp(7px, 1.8vw, 9px);
+  line-height: 1.7; color: #2a2018; word-break: break-word;
+  overflow: hidden; transform: rotate(-3deg); transform-origin: top left;
+}
+#b-r-from {
+  left: 47.7%; top: 50.9%; width: 30.8%;
+  font-family: 'Special Elite', serif; font-size: clamp(7px, 1.8vw, 9px);
+  color: #2a2018; font-style: italic;
+  transform: rotate(-3deg); transform-origin: top left;
+}
+#b-film-strip {
+  position: absolute; z-index: 10; left: 65.6%; top: 21.8%; width: 30%;
+  transform: rotate(4deg); transform-origin: top left;
+  display: flex; flex-direction: column; gap: 0;
+  overflow: hidden; padding: 22px 16px;
+}
+.b-r-photo-slot {
+  width: 100%; height: 80px; overflow: hidden; position: relative; flex-shrink: 0;
+  margin-bottom: 5px;
+}
+.b-r-photo-slot:last-of-type { margin-bottom: 0; }
+.b-r-photo-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+#b-strip-frame-overlay {
+  position: absolute; inset: 0; z-index: 5;
+  background-size: 100% 100%; background-repeat: no-repeat; pointer-events: none;
+}
+#b-result-actions {
+  position: absolute; z-index: 20; bottom: 30px; left: 0; right: 0;
+  display: flex; gap: 12px; justify-content: center;
+}
+#b-result-actions .b-pixel-btn { font-size: 8px; }
+</style>
+</head>
+<body>
+
+<!-- BOOTH HOME -->
+<section id="booth-home" class="booth-screen active">
+  <div class="booth-screen-bg"></div>
+  <div class="booth-screen-overlay"></div>
+  <img src="btn-enter.png" class="btn-enter-img" onclick="boothGoTo('booth-frames')"
+    ontouchstart="this.style.transform='translate(calc(-50% + 2px), calc(-50% + 2px))'"
+    ontouchend="this.style.transform='translate(-50%,-50%)'"
+  />
+  <button class="btn-exit" onclick="exitBooth()">EXIT</button>
+</section>
+
+<!-- BOOTH FRAME SELECTION -->
+<section id="booth-frames" class="booth-screen">
+  <div class="booth-screen-bg"></div>
+  <div class="booth-screen-overlay"></div>
+  <div class="b-frame-cards-row">
+    <div class="b-frame-card" id="bfcard-1" onclick="boothSelectFrame(1)">
+      <img src="frame_01.png" alt="Frame 1" />
+    </div>
+    <div class="b-frame-card" id="bfcard-2" onclick="boothSelectFrame(2)">
+      <img src="frame_02.png" alt="Frame 2" />
+    </div>
+    <div class="b-frame-card" id="bfcard-3" onclick="boothSelectFrame(3)">
+      <img src="frame_03.png" alt="Frame 3" />
+    </div>
+  </div>
+  <div class="b-frame-btn-row">
+    <button class="b-pixel-btn" onclick="boothGoTo('booth-home')">← BACK</button>
+    <button class="b-pixel-btn pink" id="b-btn-confirm-frame" onclick="boothConfirmFrame()" disabled>NEXT →</button>
+  </div>
+</section>
+
+<!-- BOOTH CAMERA -->
+<section id="booth-camera" class="booth-screen">
+  <video id="booth-camera-video" autoplay playsinline muted></video>
+  <canvas id="booth-capture-canvas"></canvas>
+  <div class="b-cam-top">
+    <span class="b-cam-label">LUNECHILD</span>
+    <button class="b-btn-cam-back" onclick="boothStopCamera(); boothGoTo('booth-frames')">← BACK</button>
+  </div>
+  <div id="b-shot-counter"></div>
+  <div class="b-cam-bottom">
+    <p class="b-cam-status" id="b-cam-status">TAP TO START</p>
+    <div id="b-thumb-strip"></div>
+    <button id="b-btn-capture" onclick="boothStartShotSequence()">
+      <div class="b-sh-inner"></div>
+    </button>
+  </div>
+  <div id="b-countdown-overlay"><span id="b-countdown-number">3</span></div>
+  <div id="b-flash-overlay"></div>
+</section>
+
+<!-- BOOTH NAME INPUT -->
+<section id="booth-name" class="booth-screen">
+  <div class="booth-screen-bg"></div>
+  <div class="booth-screen-overlay"></div>
+  <div id="b-name-input-wrap">
+    <input type="text" class="b-pixel-input" id="b-input-name" placeholder="your name..." maxlength="30" autocomplete="off" />
+  </div>
+  <div class="b-input-btn-row">
+    <button class="b-pixel-btn" onclick="boothGoTo('booth-camera')">← BACK</button>
+    <button class="b-pixel-btn pink" onclick="boothConfirmName()">NEXT →</button>
+  </div>
+</section>
+
+<!-- BOOTH LETTER INPUT -->
+<section id="booth-message" class="booth-screen">
+  <div class="booth-screen-bg"></div>
+  <div class="booth-screen-overlay"></div>
+  <div id="b-letter-input-wrap">
+    <textarea class="b-pixel-input" id="b-input-message" placeholder="write your message..." maxlength="250"></textarea>
+  </div>
+  <div class="b-input-btn-row">
+    <button class="b-pixel-btn" onclick="boothGoTo('booth-name')">← BACK</button>
+    <button class="b-pixel-btn pink" onclick="boothConfirmMessage()">FINISH →</button>
+  </div>
+</section>
+
+<!-- BOOTH RESULT -->
+<section id="booth-result" class="booth-screen">
+  <div class="booth-screen-bg"></div>
+  <div class="booth-screen-overlay"></div>
+  <div class="b-r-overlay" id="b-r-message"></div>
+  <div class="b-r-overlay" id="b-r-from"></div>
+  <div id="b-film-strip">
+    <div class="b-r-photo-slot" id="b-r-slot-0"><img id="b-r-photo-0" src="" alt="" /></div>
+    <div class="b-r-photo-slot" id="b-r-slot-1"><img id="b-r-photo-1" src="" alt="" /></div>
+    <div class="b-r-photo-slot" id="b-r-slot-2"><img id="b-r-photo-2" src="" alt="" /></div>
+    <div id="b-strip-frame-overlay"></div>
+  </div>
+  <div id="b-result-actions">
+    <button class="b-pixel-btn" onclick="boothRestart()">AGAIN</button>
+    <button class="b-pixel-btn pink" onclick="boothSaveResult()">SAVE</button>
+  </div>
+</section>
+
+<script>
+/* ── Exit back to parent ── */
+function exitBooth() {
+  boothStopCamera();
+  if (window.parent && window.parent !== window) {
+    window.parent.navigate('home');
+  }
+}
+
+/* ── Booth state ── */
+const BOOTH_FRAMES = { 1:'frame_01.png', 2:'frame_02.png', 3:'frame_03.png' };
+const BOOTH_SHOTS_BY_FRAME = { 1: 3, 2: 3, 3: 2 };
+const boothState = { selectedFrame:null, photos:[], playerName:'', playerMessage:'' };
+let BOOTH_TOTAL_SHOTS = 3;
+let boothVideoStream = null, boothShotsTaken = 0, boothIsCapturing = false;
+
+function boothGoTo(id) {
+  document.querySelectorAll('.booth-screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'booth-camera') boothInitCamera();
+}
+
+function boothSelectFrame(num) {
+  boothState.selectedFrame = num;
+  document.querySelectorAll('.b-frame-card').forEach(el => el.classList.remove('selected'));
+  document.getElementById('bfcard-' + num).classList.add('selected');
+  document.getElementById('b-btn-confirm-frame').disabled = false;
+}
+
+function boothConfirmFrame() {
+  if (!boothState.selectedFrame) return;
+  BOOTH_TOTAL_SHOTS = BOOTH_SHOTS_BY_FRAME[boothState.selectedFrame] || 3;
+  boothGoTo('booth-camera');
+}
+
+async function boothInitCamera() {
+  boothShotsTaken = 0; boothState.photos = []; boothIsCapturing = false;
+
+  const dotContainer = document.getElementById('b-shot-counter');
+  dotContainer.innerHTML = '';
+  for (let i = 0; i < BOOTH_TOTAL_SHOTS; i++) {
+    const d = document.createElement('div');
+    d.className = 'b-shot-dot'; d.id = 'bsdot-' + i;
+    dotContainer.appendChild(d);
+  }
+
+  const thumbStrip = document.getElementById('b-thumb-strip');
+  thumbStrip.innerHTML = '';
+  for (let i = 0; i < BOOTH_TOTAL_SHOTS; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'b-thumb-slot'; slot.id = 'btslot-' + i;
+    slot.innerHTML = '<div class="b-thumb-empty">○</div>';
+    thumbStrip.appendChild(slot);
+  }
+
+  boothUpdateShotDots();
+  document.getElementById('b-cam-status').textContent = 'TAP TO START';
+  document.getElementById('b-btn-capture').disabled = false;
+  boothStopCamera();
+
+  try {
+    boothVideoStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
+      audio: false
+    });
+    const video = document.getElementById('booth-camera-video');
+    video.srcObject = boothVideoStream;
+    try { await video.play(); } catch(e) {}
+  } catch(err) {
+    if (err.name === 'NotAllowedError') {
+      alert('Camera access denied. Please allow camera in your browser settings.');
+    } else {
+      alert('Could not start camera. Please try again.');
+    }
+  }
+}
+
+function boothStopCamera() {
+  if (boothVideoStream) { boothVideoStream.getTracks().forEach(t => t.stop()); boothVideoStream = null; }
+}
+
+function boothUpdateShotDots() {
+  for (let i = 0; i < BOOTH_TOTAL_SHOTS; i++) {
+    const d = document.getElementById('bsdot-' + i);
+    if (!d) continue;
+    d.classList.remove('taken', 'current');
+    if (i < boothShotsTaken) d.classList.add('taken');
+    else if (i === boothShotsTaken) d.classList.add('current');
+  }
+}
+
+function boothStartShotSequence() {
+  if (boothIsCapturing) return;
+  boothIsCapturing = true;
+  document.getElementById('b-btn-capture').disabled = true;
+  document.getElementById('b-cam-status').textContent = `SHOT ${boothShotsTaken + 1} / ${BOOTH_TOTAL_SHOTS}`;
+  boothRunCountdown();
+}
+
+function boothRunCountdown() {
+  const overlay = document.getElementById('b-countdown-overlay');
+  const numEl = document.getElementById('b-countdown-number');
+  let count = 3;
+  overlay.classList.add('visible'); numEl.textContent = count;
+  const timer = setInterval(() => {
+    count--;
+    if (count > 0) { numEl.textContent = count; }
+    else { clearInterval(timer); setTimeout(() => { overlay.classList.remove('visible'); boothCaptureShot(); }, 720); }
+  }, 900);
+}
+
+function boothCaptureShot() {
+  const video = document.getElementById('booth-camera-video');
+  const canvas = document.getElementById('booth-capture-canvas');
+  const flash = document.getElementById('b-flash-overlay');
+  flash.classList.add('flash');
+  setTimeout(() => flash.classList.remove('flash'), 420);
+  canvas.width = video.videoWidth || 640; canvas.height = video.videoHeight || 480;
+  const ctx = canvas.getContext('2d');
+  ctx.translate(canvas.width, 0); ctx.scale(-1, 1);
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  // B&W conversion
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const data = imageData.data;
+  for (let i = 0; i < data.length; i += 4) {
+    const gray = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
+    data[i] = data[i + 1] = data[i + 2] = gray;
+  }
+  ctx.putImageData(imageData, 0, 0);
+
+  const dataURL = canvas.toDataURL('image/jpeg', 0.85);
+  boothState.photos.push(dataURL);
+  document.getElementById('btslot-' + boothShotsTaken).innerHTML = `<img src="${dataURL}" />`;
+  boothShotsTaken++;
+  boothUpdateShotDots();
+  if (boothShotsTaken < BOOTH_TOTAL_SHOTS) {
+    document.getElementById('b-cam-status').textContent = `SHOT ${boothShotsTaken + 1} / ${BOOTH_TOTAL_SHOTS}`;
+    setTimeout(boothRunCountdown, 900);
+  } else {
+    document.getElementById('b-cam-status').textContent = '✦ ALL DONE!';
+    setTimeout(() => { boothStopCamera(); boothGoTo('booth-name'); }, 900);
+  }
+}
+
+function boothConfirmName() {
+  const val = document.getElementById('b-input-name').value.trim();
+  if (!val) { document.getElementById('b-input-name').focus(); return; }
+  boothState.playerName = val;
+  boothGoTo('booth-message');
+}
+document.getElementById('b-input-name').addEventListener('keydown', e => { if (e.key === 'Enter') boothConfirmName(); });
+
+function boothConfirmMessage() {
+  const val = document.getElementById('b-input-message').value.trim();
+  if (!val) { document.getElementById('b-input-message').focus(); return; }
+  boothState.playerMessage = val;
+  boothBuildResult();
+  boothGoTo('booth-result');
+}
+
+function boothBuildResult() {
+  const frameFile = BOOTH_FRAMES[boothState.selectedFrame] || BOOTH_FRAMES[1];
+  document.getElementById('b-r-message').textContent = boothState.playerMessage;
+  document.getElementById('b-r-from').textContent = boothState.playerName;
+
+  const strip = document.getElementById('b-film-strip');
+  if (boothState.selectedFrame === 3) {
+    strip.style.top = '27%'; strip.style.left = '63%';
+  } else {
+    strip.style.top = '21.8%'; strip.style.left = '65.6%';
+  }
+
+  for (let i = 0; i < 3; i++) {
+    const slot = document.getElementById('b-r-slot-' + i);
+    const img  = document.getElementById('b-r-photo-' + i);
+    if (i < BOOTH_TOTAL_SHOTS && boothState.photos[i]) {
+      img.src = boothState.photos[i]; img.style.display = 'block';
+      if (slot) slot.style.display = 'block';
+    } else {
+      if (slot) slot.style.display = 'none';
+    }
+  }
+  document.getElementById('b-strip-frame-overlay').style.backgroundImage = `url('${frameFile}')`;
+}
+
+function boothSaveResult() {
+  if (!boothState.photos.length) { alert('No photos!'); return; }
+  const section = document.getElementById('booth-result');
+  const actions = document.getElementById('b-result-actions');
+  actions.style.display = 'none';
+  const dpr = Math.min(window.devicePixelRatio || 1, 2); // cap at 2x for memory
+  const W = section.offsetWidth, H = section.offsetHeight;
+  const canvas = document.createElement('canvas');
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const drawAll = () => {
+    const bgImg = new Image(); bgImg.crossOrigin = 'anonymous';
+    bgImg.onload = () => { ctx.drawImage(bgImg, 0, 0, W, H); drawOverlay(); };
+    bgImg.onerror = () => { ctx.fillStyle = '#1a1a1a'; ctx.fillRect(0, 0, W, H); drawOverlay(); };
+    bgImg.src = 'bg.png';
+  };
+
+  const drawOverlay = () => {
+    const ovImg = new Image(); ovImg.crossOrigin = 'anonymous';
+    ovImg.onload = () => {
+      const scale = Math.min(W / ovImg.width, H / ovImg.height);
+      ctx.drawImage(ovImg, (W - ovImg.width * scale) / 2, 0, ovImg.width * scale, ovImg.height * scale);
+      drawText();
+    };
+    ovImg.onerror = () => drawText();
+    ovImg.src = 'result.png';
+  };
+
+  const drawText = () => {
+    ctx.save();
+    ctx.translate(W * 0.308, H * 0.40); ctx.rotate(-3 * Math.PI / 180);
+    ctx.font = `${Math.round(W * 0.02)}px "Special Elite", serif`; ctx.fillStyle = '#2a2018';
+    wrapText(ctx, document.getElementById('b-r-message').textContent, W * 0.372)
+      .forEach((line, i) => ctx.fillText(line, 0, i * Math.round(W * 0.02) * 1.7));
+    ctx.restore();
+    ctx.save();
+    ctx.font = `italic ${Math.round(W * 0.02)}px "Special Elite", serif`; ctx.fillStyle = '#2a2018';
+    ctx.translate(W * 0.477, H * 0.509); ctx.rotate(-3 * Math.PI / 180);
+    ctx.fillText(document.getElementById('b-r-from').textContent, 0, 0);
+    ctx.restore();
+    drawFilmStrip();
+  };
+
+  const drawFilmStrip = () => {
+    const stripL = W * 0.656, stripT = H * 0.218, stripW = W * 0.30;
+    const padV = 22, padH = 16, gapH = 5, slotH = 80;
+    const n = boothState.photos.length;
+    const totalH = padV + slotH * n + gapH * (n - 1) + padV;
+    ctx.save();
+    ctx.translate(stripL, stripT); ctx.rotate(4 * Math.PI / 180);
+    ctx.beginPath(); ctx.rect(0, 0, stripW, totalH); ctx.clip();
+
+    Promise.all(boothState.photos.slice(0, n).map((src, i) => new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => resolve({ img, y: padV + i * (slotH + gapH), h: slotH });
+      img.onerror = () => resolve(null);
+      img.src = src;
+    }))).then(results => {
+      results.forEach(r => {
+        if (!r) return;
+        ctx.save();
+        ctx.beginPath(); ctx.rect(padH, r.y, stripW - padH * 2, r.h); ctx.clip();
+        const sw = stripW - padH * 2, sh = r.h;
+        const scale = Math.max(sw / r.img.naturalWidth, sh / r.img.naturalHeight);
+        ctx.drawImage(r.img, padH + (sw - r.img.naturalWidth * scale) / 2, r.y + (sh - r.img.naturalHeight * scale) / 2, r.img.naturalWidth * scale, r.img.naturalHeight * scale);
+        ctx.restore();
+      });
+      const frameFile = boothState.selectedFrame ? `frame_0${boothState.selectedFrame}.png` : null;
+      if (frameFile) {
+        const fi = new Image(); fi.crossOrigin = 'anonymous';
+        fi.onload = () => { ctx.drawImage(fi, 0, 0, stripW, totalH); ctx.restore(); finish(); };
+        fi.onerror = () => { ctx.restore(); finish(); };
+        fi.src = frameFile;
+      } else { ctx.restore(); finish(); }
+    });
+  };
+
+  const finish = () => {
+    actions.style.display = '';
+    canvas.toBlob(blob => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url;
+      a.download = `lunechild_${boothState.playerName || 'photo'}.png`; a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }, 'image/jpeg', 0.92);
+  };
+
+  drawAll();
+}
+
+function wrapText(ctx, text, maxWidth) {
+  const words = text.split(' ');
+  const lines = []; let line = '';
+  words.forEach(word => {
+    const test = line + (line ? ' ' : '') + word;
+    if (ctx.measureText(test).width > maxWidth && line) { lines.push(line); line = word; }
+    else line = test;
+  });
+  if (line) lines.push(line);
+  return lines;
+}
+
+function boothRestart() {
+  boothState.selectedFrame = null; boothState.photos = []; boothState.playerName = ''; boothState.playerMessage = '';
+  document.getElementById('b-input-name').value = '';
+  document.getElementById('b-input-message').value = '';
+  document.querySelectorAll('.b-frame-card').forEach(el => el.classList.remove('selected'));
+  document.getElementById('b-btn-confirm-frame').disabled = true;
+  boothGoTo('booth-home');
+}
+</script>
+</body>
+</html>
