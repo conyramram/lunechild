@@ -61,9 +61,9 @@ body {
 
 .dot-bg { display: none; }
 
-#home         { background-repeat: repeat; background-size: 100%; }
-#quiz-screen  { background-repeat: repeat; background-size: 100%; }
-#result-screen{ background-repeat: repeat; background-size: 100%; }
+#home         { background-image: url('bg-home.png'); background-repeat: repeat; background-size: 100%; }
+#quiz-screen  { background-image: url('bg-quiz.png'); background-repeat: repeat; background-size: 100%; }
+#result-screen{ background-image: url('bg-result.png'); background-repeat: repeat; background-size: 100%; }
 #pack-screen, #booth-screen { background: var(--bg); }
 
 .screen {
@@ -261,11 +261,11 @@ body {
   background-repeat: no-repeat; pointer-events: none;
 }
 
-#booth-home .booth-screen-overlay { background-size: cover; background-position: center; }
-#booth-frames .booth-screen-overlay { background-size: cover; background-position: center top; }
-#booth-name .booth-screen-overlay { background-size: cover; background-position: center top; }
-#booth-message .booth-screen-overlay { background-size: cover; background-position: center top; }
-#booth-result .booth-screen-overlay { background-size: contain; background-position: top center; }
+#booth-home .booth-screen-overlay { background-image: url('homepage.png'); background-size: cover; background-position: center; }
+#booth-frames .booth-screen-overlay { background-image: url('selectframe.png'); }
+#booth-name .booth-screen-overlay { background-image: url('writename.png'); }
+#booth-message .booth-screen-overlay { background-image: url('writeletter.png'); }
+#booth-result .booth-screen-overlay { background-image: url('result.png'); background-size: contain; background-position: top center; }
 
 .b-pixel-btn {
   font-family: 'Press Start 2P', monospace;
@@ -312,6 +312,7 @@ textarea.b-pixel-input { resize: none; min-height: 110px; }
 #booth-camera-video {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
   transform: scaleX(-1);
+  filter: grayscale(100%);
 }
 #booth-capture-canvas { display: none; }
 
@@ -544,7 +545,7 @@ textarea.b-pixel-input { resize: none; min-height: 110px; }
   <div class="dot-bg"></div>
   <iframe
     id="game-iframe"
-    src=""
+    src="game.html"
     style="position:absolute; inset:0; width:100%; height:100%; border:none; display:block;"
     allow="camera"
     allowfullscreen
@@ -727,43 +728,12 @@ textarea.b-pixel-input { resize: none; min-height: 110px; }
 
 <script>
 /* ── Navigation ── */
-const SCREEN_BG = {
-  'home':          { el:'home',          prop:'backgroundImage', val:"url('bg-home.png')" },
-  'quiz-screen':   { el:'quiz-screen',   prop:'backgroundImage', val:"url('bg-quiz.png')" },
-  'result-screen': { el:'result-screen', prop:'backgroundImage', val:"url('bg-result.png')" },
-};
-const BOOTH_OVERLAYS = {
-  'booth-home':    "url('homepage.png')",
-  'booth-frames':  "url('selectframe.png')",
-  'booth-name':    "url('writename.png')",
-  'booth-message': "url('writeletter.png')",
-  'booth-result':  "url('result.png')",
-};
-
 function navigate(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  // Lazy load background image for this screen
-  if (SCREEN_BG[id]) {
-    const el = document.getElementById(SCREEN_BG[id].el);
-    if (!el.style.backgroundImage) el.style.backgroundImage = SCREEN_BG[id].val;
-  }
-  // Lazy load game iframe only when user navigates to it
-  if (id === 'pack-screen') {
-    const iframe = document.getElementById('game-iframe');
-    if (!iframe.src || iframe.src === window.location.href) iframe.src = 'game.html';
-  }
-  // Lazy load booth bg when entering booth
-  if (id === 'booth-screen') {
-    const bg = document.querySelector('#booth-home .booth-screen-bg');
-    if (bg && !bg.style.backgroundImage) bg.style.backgroundImage = "url('bg.png')";
-    const ov = document.querySelector('#booth-home .booth-screen-overlay');
-    if (ov && !ov.style.backgroundImage) ov.style.backgroundImage = BOOTH_OVERLAYS['booth-home'];
-  }
   requestAnimationFrame(() => requestAnimationFrame(() =>
     document.getElementById(id).classList.add('active')
   ));
 }
-
 function openOverlay(n) { document.getElementById('overlay-'+n).classList.add('open'); }
 function closeOverlay(n) { document.getElementById('overlay-'+n).classList.remove('open'); }
 function closeOverlayBg(e, n) { if (e.target === e.currentTarget) closeOverlay(n); }
@@ -1011,12 +981,6 @@ let boothVideoStream = null, boothShotsTaken = 0, boothIsCapturing = false;
 function boothGoTo(id) {
   document.querySelectorAll('.booth-screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  // Lazy load overlay image for this booth screen
-  const ov = document.querySelector(`#${id} .booth-screen-overlay`);
-  if (ov && !ov.style.backgroundImage && BOOTH_OVERLAYS[id]) ov.style.backgroundImage = BOOTH_OVERLAYS[id];
-  // Lazy load bg.png for booth screens that need it
-  const bg = document.querySelector(`#${id} .booth-screen-bg`);
-  if (bg && !bg.style.backgroundImage) bg.style.backgroundImage = "url('bg.png')";
   if (id === 'booth-camera') boothInitCamera();
 }
 
@@ -1056,35 +1020,12 @@ async function boothInitCamera() {
   boothUpdateShotDots();
   document.getElementById('b-cam-status').textContent = 'TAP TO START';
   document.getElementById('b-btn-capture').disabled = false;
-
-  // Stop any existing stream first
-  boothStopCamera();
-
   try {
-    // Use lower resolution for Safari/iOS compatibility
-    const constraints = {
-      video: {
-        facingMode: 'user',
-        width: { ideal: 640 },
-        height: { ideal: 480 }
-      },
-      audio: false
-    };
-    boothVideoStream = await navigator.mediaDevices.getUserMedia(constraints);
-    const video = document.getElementById('booth-camera-video');
-    video.srcObject = boothVideoStream;
-    // Safari requires explicit play() call
-    try { await video.play(); } catch(e) {}
-  } catch(err) {
-    console.error('Camera error:', err);
-    if (err.name === 'NotAllowedError') {
-      alert('Camera access denied. Please allow camera in your browser settings.');
-    } else if (err.name === 'NotFoundError') {
-      alert('No camera found on this device.');
-    } else {
-      alert('Could not start camera. Please try again.');
-    }
-  }
+    boothVideoStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode:'user', width:{ideal:1280}, height:{ideal:720} }, audio: false
+    });
+    document.getElementById('booth-camera-video').srcObject = boothVideoStream;
+  } catch(err) { alert('Camera access denied. Please allow camera permissions.'); }
 }
 
 function boothStopCamera() {
@@ -1314,9 +1255,6 @@ function boothRestart() {
   document.getElementById('b-btn-confirm-frame').disabled = true;
   boothGoTo('booth-home');
 }
-
-// Load home background immediately
-document.getElementById('home').style.backgroundImage = "url('bg-home.png')";
 </script>
 </div><!-- /phone-frame -->
 </body>
