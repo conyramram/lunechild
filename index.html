@@ -312,7 +312,6 @@ textarea.b-pixel-input { resize: none; min-height: 110px; }
 #booth-camera-video {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
   transform: scaleX(-1);
-  filter: grayscale(100%);
 }
 #booth-capture-canvas { display: none; }
 
@@ -1057,12 +1056,35 @@ async function boothInitCamera() {
   boothUpdateShotDots();
   document.getElementById('b-cam-status').textContent = 'TAP TO START';
   document.getElementById('b-btn-capture').disabled = false;
+
+  // Stop any existing stream first
+  boothStopCamera();
+
   try {
-    boothVideoStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode:'user', width:{ideal:1280}, height:{ideal:720} }, audio: false
-    });
-    document.getElementById('booth-camera-video').srcObject = boothVideoStream;
-  } catch(err) { alert('Camera access denied. Please allow camera permissions.'); }
+    // Use lower resolution for Safari/iOS compatibility
+    const constraints = {
+      video: {
+        facingMode: 'user',
+        width: { ideal: 640 },
+        height: { ideal: 480 }
+      },
+      audio: false
+    };
+    boothVideoStream = await navigator.mediaDevices.getUserMedia(constraints);
+    const video = document.getElementById('booth-camera-video');
+    video.srcObject = boothVideoStream;
+    // Safari requires explicit play() call
+    try { await video.play(); } catch(e) {}
+  } catch(err) {
+    console.error('Camera error:', err);
+    if (err.name === 'NotAllowedError') {
+      alert('Camera access denied. Please allow camera in your browser settings.');
+    } else if (err.name === 'NotFoundError') {
+      alert('No camera found on this device.');
+    } else {
+      alert('Could not start camera. Please try again.');
+    }
+  }
 }
 
 function boothStopCamera() {
