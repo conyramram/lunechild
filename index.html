@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <link rel="icon" type="image/png" href="favicon.png">
-    <!-- For iPhone home screen shortcut -->
     <link rel="apple-touch-icon" href="favicon.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -17,23 +16,17 @@
 
 :root {
   --bg:        #1c1c1c;
-  --dot:       rgba(255,255,255,0.20);
   --win-bg:    #edf1ef;
-  --win-title: #969eb5;
   --win-bdr:   #19191c;
   --win-hi:    #ffffff;
   --win-sh:    #555550;
   --pink:      #e87ca0;
-  --pink-lite: #f4c0d4;
-  --mauve:     #9080b8;
   --ink:       #222220;
-  --gray:      #888;
   --pixel:     'Rubik', sans-serif;
   --vt:        'Rubik', sans-serif;
 }
 
 html { height: 100%; height: 100dvh; width: 100%; }
-
 body {
   height: 100%; height: 100dvh; width: 100%;
   overflow: hidden; background: #111;
@@ -63,7 +56,6 @@ body {
 }
 
 .dot-bg { display: none; }
-
 #home         { background-repeat: repeat; background-size: 100%; }
 #quiz-screen  { background-repeat: repeat; background-size: 100%; }
 #result-screen{ background-repeat: repeat; background-size: 100%; }
@@ -77,9 +69,6 @@ body {
 
 .win {
   background: #edf1ef; border: 1px solid #19191c;
-  box-shadow: 3px 3px 0 #19191c, inset 1px 1px 0 rgba(255,255,255,0.6), inset -1px -1px 0 #aaa;
-}
-#quiz-screen .win, #result-screen .win {
   box-shadow: 3px 3px 0 #19191c, inset 1px 1px 0 rgba(255,255,255,0.6), inset -1px -1px 0 #aaa;
 }
 .win-titlebar {
@@ -143,15 +132,24 @@ body {
   position: relative; z-index: 10; padding: 8px 16px 10px; background: transparent;
   display: flex; justify-content: center; align-items: center; gap: 10px; flex-shrink: 0;
 }
+
+/* ── Button states ── */
 .pxbtn {
-  font-family: var(--pixel); font-size: 12px; font-weight: 600;
-  background: var(--win-bg); color: var(--ink); border: 2px solid var(--win-bdr);
-  box-shadow: 4px 4px 0 var(--win-sh), inset 1px 1px 0 var(--win-hi), inset -1px -1px 0 #aaa;
-  padding: 14px 32px; cursor: pointer; letter-spacing: 0.05em; text-transform: uppercase;
-  transition: transform 0.08s, box-shadow 0.08s; display: none; min-height: 48px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px; background: #f0f0f0; color: #1a1a1a;
+  border: none; outline: 3px solid #1a1a1a;
+  padding: 10px 18px; cursor: pointer;
+  box-shadow: 3px 3px 0 #000;
+  transition: transform 0.08s, box-shadow 0.08s;
+  letter-spacing: 0.02em;
+  display: none; min-height: 0;
 }
 .pxbtn.show { display: inline-block; }
-.pxbtn:active { transform: translate(4px,4px); box-shadow: none; }
+.pxbtn.dim  { display: inline-block; opacity: 0.32; cursor: not-allowed; pointer-events: none; }
+.pxbtn.show:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 #000; }
+/* pink variant for NEXT */
+#q-next-btn { background: #f4a8c0; }
+#q-next-btn:active { background: #e07898; }
 
 .q-progressbar { position: relative; z-index: 10; height: 3px; background: #2e2e2e; flex-shrink: 0; }
 .q-progressbar-fill { height: 100%; background: var(--pink); transition: width 0.45s cubic-bezier(.4,0,.2,1); box-shadow: 0 0 6px rgba(232,124,160,0.6); }
@@ -202,16 +200,16 @@ body {
   -webkit-tap-highlight-color: transparent; text-align: left; width: 100%; min-height: 52px;
 }
 .q-opt:active { transform: translate(2px,2px); box-shadow: none; }
-.q-opt.on { background: #e87ca0; border-color: #e87ca0; }
+.q-opt.on { background: #edf1ef; border-color: #edf1ef; }
 .ok {
   font-family: var(--pixel); font-size: 11px; font-weight: 700; color: #888; flex-shrink: 0;
   width: 22px; height: 22px; background: #edf1ef; border: 1px solid #bbb;
   box-shadow: 1px 1px 0 #fff inset; display: flex; align-items: center; justify-content: center;
   transition: background 0.15s, color 0.15s;
 }
-.q-opt.on .ok { background: #969eb5; color: #fff; border-color: #969eb5; box-shadow: 1px 1px 0 rgba(255,255,255,0.3) inset; }
+.q-opt.on .ok { background: #f4a8c0; color: #fff; border-color: #eb9cb5; box-shadow: 1px 1px 0 rgba(255,255,255,0.3) inset; }
 .ov { font-family: var(--vt); font-size: 12px; color: #2a2a2a; line-height: 1.4; flex: 1; }
-.q-opt.on .ov { color: #fff; }
+.q-opt.on .ov { color: #f4a8c00; }
 
 .overlay { position: absolute; inset: 0; z-index: 100; background: rgba(0,0,0,0.78); display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.22s ease; }
 .overlay.open { opacity: 1; pointer-events: all; }
@@ -221,10 +219,6 @@ body {
 .ov-win .win-scroll p { font-family: var(--vt); font-size: 17px; color: #333; line-height: 1.75; margin-bottom: 12px; }
 .ov-win .win-scroll em { color: #7060a0; font-style: italic; }
 .ov-win .win-scroll a { pointer-events: all; cursor: pointer; }
-
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: #bbb; }
-::-webkit-scrollbar-thumb { background: #888; }
 
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: #bbb; }
@@ -289,19 +283,19 @@ body {
       </div>
       <div class="win-scroll" id="q-scroll" style="display:flex; flex-direction:column;">
         <div id="q-intro" class="q-intro" style="display:flex; flex:1; align-items:center; justify-content:center;">
-          <img src="quiz-intro.png" style="width:100%; max-height:200px; object-fit:cover; display:block;">
+          <img src="quiz-intro.png" style="width:100%; height:auto; object-fit:contain; display:block;">
+        </div>
+        <div id="q-intro2" class="q-intro" style="display:none; flex:1; align-items:center; justify-content:center;">
+          <img src="quiz-intro2.png" style="width:100%; height:auto; object-fit:contain; display:block;">
         </div>
         <div id="q-wrap" style="display:none"></div>
       </div>
     </div>
   </div>
   <div class="action-bar">
-    <button class="pxbtn show" id="q-start-btn" onclick="quizStart()" style="background:none; border:none; box-shadow:none; padding:0;">
-      <img src="btn-start.png" style="height:48px; display:block;">
-    </button>
-    <button class="pxbtn" id="q-next-btn" onclick="quizNext()" style="background:none; border:none; box-shadow:none; padding:0;">
-      <img src="btn-next.png" style="height:48px; display:block;">
-    </button>
+    <button class="pxbtn show" id="q-start-btn" onclick="quizStart()">START →</button>
+    <button class="pxbtn" id="q-back-btn" onclick="quizBack()">← BACK</button>
+    <button class="pxbtn" id="q-next-btn" onclick="quizNext()">NEXT →</button>
   </div>
 </div>
 
@@ -309,39 +303,30 @@ body {
 <!-- ════════════ RESULT ════════════ -->
 <div id="result-screen" class="screen inner-screen">
   <div class="dot-bg"></div>
-  <div style="margin: 100px 50px 0; flex: none; height: 60%; display: flex; align-items: center; justify-content: center; position: relative; z-index: 5;">
-    <img id="result-card-img" src="" alt="Your Archetype"
-      style="width:100%; height:100%; object-fit:contain; display:block;">
+  <div style="margin: 40px 20px 0; flex: none; height: 75%; display: flex; align-items: center; justify-content: center; position: relative; z-index: 5;">
+    <img id="result-card-img" src="" alt="Your Archetype" style="width:100%; height:100%; object-fit:contain; display:block;">
   </div>
   <div class="action-bar" style="margin-top: 12px; flex-direction: column; gap: 8px;">
-    <button class="pxbtn show" onclick="saveResult()">SAVE ↓</button>
-    <button class="pxbtn show" onclick="retakeQuiz()" style="background:#f4a8c0;">↺ RETAKE</button>
-  </div>
+      <button class="pxbtn show" onclick="saveResult()">SAVE MY LUNECHILD</button>
+      <button class="pxbtn show" onclick="retakeQuiz()">RETAKE</button>
+    </div>
 </div>
 
 
 <!-- ════════════ PACK ════════════ -->
 <div id="pack-screen" class="screen inner-screen">
   <div class="dot-bg"></div>
-  <iframe
-    id="game-iframe"
-    src=""
+  <iframe id="game-iframe" src=""
     style="position:absolute; inset:0; width:100%; height:100%; border:none; display:block;"
-    allow="camera"
-    allowfullscreen
-  ></iframe>
+    allow="camera" allowfullscreen></iframe>
 </div>
 
 
 <!-- ════════════ BOOTH ════════════ -->
 <div id="booth-screen" class="screen inner-screen">
-  <iframe
-    id="booth-iframe"
-    src=""
+  <iframe id="booth-iframe" src=""
     style="position:absolute; inset:0; width:100%; height:100%; border:none; display:block;"
-    allow="camera; microphone"
-    allowfullscreen
-  ></iframe>
+    allow="camera; microphone" allowfullscreen></iframe>
 </div>
 
 
@@ -353,12 +338,12 @@ body {
       <div class="win-ctrls"><div class="wc" onclick="closeOverlay('letter')">×</div></div>
     </div>
     <div class="win-scroll">
-      <p><span style="font-family:'Rubik',sans-serif;font-size:15px;font-weight:700;">Volah, greetings from LUNE!,</span></p>
-      <p>This is ConyCorn — we are superrr pleased to meet you. We’re a pixel game studio based in BKK, Thailand, and this little project is our greeting gift to you all on EAU🌏. We hope you have a wonderful and fabulous time jamming through this little self-discovery session.</p>
-      <p>We wanted to help rekindle your fond memories and spark something inside you that may have been resting quietly.</p>
-      <p>One last thing: may you never stop chasing your dreams, and may your path feel a little less lonely knowing we’re chasing ours alongside you, hehe :D</p>
-      <p>Hope you kindly look forward to our next fun projects</p>
-      <p style="font-family:'Rubik',sans-serif;font-size:13px;font-weight:500;letter-spacing:0.04em;color: #e87ca0">Love, ConyCorn Team</p>
+      <p><span style="font-family:'Rubik',sans-serif;font-size:17px;font-weight:700;">Volah, greetings from LUNE!,</span></p>
+      <p style="font-size: 14px;"></pstyle>This is ConyCorn — we are superrr pleased to meet you. We're a pixel game studio based in BKK, Thailand, and this little project is our greeting gift to you all on EAU🌏. We hope you have a wonderful and fabulous time jamming through this little self-discovery session.</p>
+      <p style="font-size: 14px;"></pstyle>We wanted to help rekindle your fond memories and spark something inside you that may have been resting quietly.</p>
+      <p style="font-size: 14px;"></pstyle>One last thing: may you never stop chasing your dreams, and may your path feel a little less lonely knowing we're chasing ours alongside you, hehe :D</p>
+      <p style="font-size: 14px;"></pstyle>Hope you kindly look forward to our next fun projects</p>
+      <p style="font-family:'Rubik',sans-serif;font-size:13px;font-weight:500;letter-spacing:0.04em;color: #e87ca0">Love,<br>ConyCorn Team</p>
       <div style="text-align:center; margin-top:16px; padding-bottom:32px;">
         <img src="logo.png" style="height:52px; width:auto; display:block; margin:0 auto 10px;">
         <div style="display:flex; justify-content:center; align-items:center; font-family:'Press Start 2P',monospace; font-size:8px; gap:4px;">
@@ -382,9 +367,9 @@ body {
       <div class="win-ctrls"><div class="wc" onclick="closeOverlay('about')">×</div></div>
     </div>
     <div class="win-scroll">
-      <p>In the year 30xx, the four rabbits have descended from LUNE (🌕)on EAU (🌏) to complete their mission. All they know is one thing: </p>
-      <p>There are so many things to learn on EAU!</p>
-      <p>and the only way out is ”THROUGH”</p>
+      <p style="font-size: 14px;"></pstyle>In the year 30xx, the four rabbits have descended from LUNE (🌕) on EAU (🌏) to complete their mission. All they know is one thing:</p>
+      <p style="font-size: 14px;"></pstyle>There are so many things to learn on EAU!</p>
+      <p style="font-size: 14px;"></pstyle>and the only way out is "THROUGH"</p>
       <div style="text-align:center; margin-top:16px; padding-bottom:32px;">
         <img src="logo.png" style="height:52px; width:auto; display:block; margin:0 auto 10px;">
         <div style="display:flex; justify-content:center; align-items:center; font-family:'Press Start 2P',monospace; font-size:8px; gap:4px;">
@@ -403,19 +388,17 @@ body {
 <script>
 /* ── Navigation ── */
 const SCREEN_BG = {
-  'home':          { el:'home',          prop:'backgroundImage', val:"url('bg-home.png')" },
-  'quiz-screen':   { el:'quiz-screen',   prop:'backgroundImage', val:"url('bg-quiz.png')" },
-  'result-screen': { el:'result-screen', prop:'backgroundImage', val:"url('bg-result.png')" },
+  'home':          { el:'home',          val:"url('bg-home.png')" },
+  'quiz-screen':   { el:'quiz-screen',   val:"url('bg-quiz.png')" },
+  'result-screen': { el:'result-screen', val:"url('bg-result.png')" },
 };
 
 function navigate(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  // Lazy load background image for this screen
   if (SCREEN_BG[id]) {
     const el = document.getElementById(SCREEN_BG[id].el);
     if (!el.style.backgroundImage) el.style.backgroundImage = SCREEN_BG[id].val;
   }
-  // Lazy load iframes only when needed
   if (id === 'pack-screen') {
     const iframe = document.getElementById('game-iframe');
     if (!iframe.src || iframe.src === window.location.href) iframe.src = 'game.html';
@@ -433,84 +416,100 @@ function openOverlay(n) { document.getElementById('overlay-'+n).classList.add('o
 function closeOverlay(n) { document.getElementById('overlay-'+n).classList.remove('open'); }
 function closeOverlayBg(e, n) { if (e.target === e.currentTarget) closeOverlay(n); }
 
+/* ── Button helpers ──
+   show  = visible + clickable
+   dim   = visible + grayed out + not clickable
+   hide  = hidden
+*/
+function btnNext(state) {
+  const b = document.getElementById('q-next-btn');
+  b.className = state === 'show' ? 'pxbtn show' : state === 'dim' ? 'pxbtn dim' : 'pxbtn';
+}
+function btnBack(visible) {
+  document.getElementById('q-back-btn').className = visible ? 'pxbtn show' : 'pxbtn';
+}
+function btnStart(visible) {
+  document.getElementById('q-start-btn').className = visible ? 'pxbtn show' : 'pxbtn';
+}
+
 /* ═══════════════════════════════════
    QUIZ DATA
 ═══════════════════════════════════ */
 const ARCHETYPES = {
-  Dreamer:    { name:'The Dreamer',    tag:'The one who paints with moonlight.',           gift:'Emotional Vision',   remind:'#BecomeYourDream',    sym:'🌕', bg:'#e8e0f4', compat:'Storyteller, Alchemist', grow:'Visionary, Maker',       desc:['You drift through LUNE as if you\'ve always belonged here. Every silver mist feels like a dream you once whispered into the stars. You create from emotion — soft, fluid, and untamed.','On EAU, people may have called you too sensitive, but here on LUNE, your sensitivity is your superpower. You see colors where others see emptiness.'] },
-  Visionary:  { name:'The Visionary',  tag:'The architect of constellations.',             gift:'Future Sight',        remind:'#LeadWithLight',       sym:'🌙', bg:'#dce8f8', compat:'Alchemist, Maker',      grow:'Dreamer, Guardian',      desc:['When you gaze at LUNE\'s horizon, you don\'t just see beauty — you see potential. You\'re guided by a compass no one else can see, always reaching beyond the known.','People follow your spark because you carry the blueprint of a better world.'] },
-  Maker:      { name:'The Maker',      tag:'The hands that shape the stardust.',           gift:'Creative Discipline', remind:'#ProgressOverPerfect', sym:'🌔', bg:'#f4ecd8', compat:'Visionary, Dreamer',    grow:'Alchemist, Storyteller', desc:['On LUNE, your palms glow with steady light. You don\'t just dream — you build. You find peace in process, in crafting something real from the chaos of imagination.','When others see dust, you see materials. When others hesitate, you begin.'] },
-  Storyteller:{ name:'The Storyteller',tag:'The keeper of cosmic echoes.',                 gift:'Heart Wisdom',         remind:'#VoiceWithGrace',      sym:'🌸', bg:'#f4dce4', compat:'Dreamer, Guardian',    grow:'Alchemist, Visionary',   desc:['You came to LUNE carrying voices, laughter, and love in your chest. To you, creation is connection — every poem, melody, or image is a bridge between hearts.','Even in silence, you speak. You translate human tenderness into light. You are how LUNE remembers EAU.'] },
-  Alchemist:  { name:'The Alchemist',  tag:'The one who dances with chaos.',               gift:'Adaptive Genius',     remind:'#TrustTheProcess',     sym:'✦',  bg:'#d8f0ec', compat:'Visionary, Maker',     grow:'Storyteller, Guardian',  desc:['You play with the unpredictable, finding patterns in the storm. LUNE\'s strange minerals — you see experiments waiting to happen.','You turn mistakes into gold, and accidents into innovation. You thrive where others hesitate.'] },
-  Guardian:   { name:'The Guardian',   tag:'The flame that keeps others warm.',            gift:'Steady Strength',     remind:'#ProtectYourPeace',    sym:'🔥', bg:'#f4ead0', compat:'Storyteller, Dreamer', grow:'Visionary, Maker',       desc:['When you arrived on LUNE, your first instinct was to look back — to check that everyone else was safe. You create from love, not ego.','You\'re the campfire in the cold, the reminder that care and creativity are kin.'] },
-  Rebel:      { name:'The Rebel',      tag:'The star that refuses the orbit.',             gift:'Bold Defiance',       remind:'#BreakThePattern',     sym:'⚡', bg:'#f0d8e0', compat:'Visionary, Alchemist', grow:'Maker, Guardian',        desc:['You are the one who refuses to follow "the way things are." When others see rules, you see open sky. You don\'t create to please — you create to disrupt, liberate, and reimagine.','On LUNE, your spark burns fast and bright, carving new paths where none existed.'] },
-  Mystic:     { name:'The Mystic',     tag:'The one who reads the silence between stars.', gift:'Deep Intuition',      remind:'#ListenWithin',        sym:'☽',  bg:'#ece0f4', compat:'Dreamer, Storyteller', grow:'Visionary, Maker',       desc:['While others search outside, you listen inward. LUNE speaks to you not through signs but through stillness. Your creativity blooms from intuition — subtle, symbolic, profound.','You sense meaning where others see emptiness. Not all truths are spoken; some are felt, seen in patterns, revealed in dreams.'] },
-  Explorer:   { name:'The Explorer',   tag:'The pathfinder of distant horizons.',          gift:'Brave Curiosity',     remind:'#KeepGoingFarther',    sym:'🌟', bg:'#d8f0e8', compat:'Rebel, Alchemist',     grow:'Guardian, Storyteller',  desc:['You grow through motion — through discovery, travel, and stepping into the unknown. LUNE is not a destination to you, but a doorway to the next frontier.','You\'re not driven by escape — but curiosity. Wherever you go, you gather truths, lessons, and experience.'] },
+  Dreamer:    { name:'The Dreamer',     tag:'The one who paints with moonlight.',           gift:'Emotional Vision',    remind:'#BecomeYourDream',    sym:'🌕', bg:'#e8e0f4', compat:'Storyteller, Alchemist', grow:'Visionary, Maker',       desc:['You drift through LUNE as if you\'ve always belonged here. Every silver mist feels like a dream you once whispered into the stars. You create from emotion — soft, fluid, and untamed.','On EAU, people may have called you too sensitive, but here on LUNE, your sensitivity is your superpower. You see colors where others see emptiness.'] },
+  Visionary:  { name:'The Visionary',   tag:'The architect of constellations.',             gift:'Future Sight',         remind:'#LeadWithLight',       sym:'🌙', bg:'#dce8f8', compat:'Alchemist, Maker',      grow:'Dreamer, Guardian',      desc:['When you gaze at LUNE\'s horizon, you don\'t just see beauty — you see potential. You\'re guided by a compass no one else can see, always reaching beyond the known.','People follow your spark because you carry the blueprint of a better world.'] },
+  Maker:      { name:'The Maker',       tag:'The hands that shape the stardust.',           gift:'Creative Discipline',  remind:'#ProgressOverPerfect', sym:'🌔', bg:'#f4ecd8', compat:'Visionary, Dreamer',    grow:'Alchemist, Storyteller', desc:['On LUNE, your palms glow with steady light. You don\'t just dream — you build. You find peace in process, in crafting something real from the chaos of imagination.','When others see dust, you see materials. When others hesitate, you begin.'] },
+  Storyteller:{ name:'The Storyteller', tag:'The keeper of cosmic echoes.',                 gift:'Heart Wisdom',          remind:'#VoiceWithGrace',      sym:'🌸', bg:'#f4dce4', compat:'Dreamer, Guardian',    grow:'Alchemist, Visionary',   desc:['You came to LUNE carrying voices, laughter, and love in your chest. To you, creation is connection — every poem, melody, or image is a bridge between hearts.','Even in silence, you speak. You translate human tenderness into light. You are how LUNE remembers EAU.'] },
+  Alchemist:  { name:'The Alchemist',   tag:'The one who dances with chaos.',               gift:'Adaptive Genius',      remind:'#TrustTheProcess',     sym:'✦',  bg:'#d8f0ec', compat:'Visionary, Maker',     grow:'Storyteller, Guardian',  desc:['You play with the unpredictable, finding patterns in the storm. LUNE\'s strange minerals — you see experiments waiting to happen.','You turn mistakes into gold, and accidents into innovation. You thrive where others hesitate.'] },
+  Guardian:   { name:'The Guardian',    tag:'The flame that keeps others warm.',            gift:'Steady Strength',      remind:'#ProtectYourPeace',    sym:'🔥', bg:'#f4ead0', compat:'Storyteller, Dreamer', grow:'Visionary, Maker',       desc:['When you arrived on LUNE, your first instinct was to look back — to check that everyone else was safe. You create from love, not ego.','You\'re the campfire in the cold, the reminder that care and creativity are kin.'] },
+  Rebel:      { name:'The Rebel',       tag:'The star that refuses the orbit.',             gift:'Bold Defiance',        remind:'#BreakThePattern',     sym:'⚡', bg:'#f0d8e0', compat:'Visionary, Alchemist', grow:'Maker, Guardian',        desc:['You are the one who refuses to follow "the way things are." When others see rules, you see open sky. You don\'t create to please — you create to disrupt, liberate, and reimagine.','On LUNE, your spark burns fast and bright, carving new paths where none existed.'] },
+  Mystic:     { name:'The Mystic',      tag:'The one who reads the silence between stars.', gift:'Deep Intuition',       remind:'#ListenWithin',        sym:'☽',  bg:'#ece0f4', compat:'Dreamer, Storyteller', grow:'Visionary, Maker',       desc:['While others search outside, you listen inward. LUNE speaks to you not through signs but through stillness. Your creativity blooms from intuition — subtle, symbolic, profound.','You sense meaning where others see emptiness. Not all truths are spoken; some are felt, seen in patterns, revealed in dreams.'] },
+  Explorer:   { name:'The Explorer',    tag:'The pathfinder of distant horizons.',          gift:'Brave Curiosity',      remind:'#KeepGoingFarther',    sym:'🌟', bg:'#d8f0e8', compat:'Rebel, Alchemist',     grow:'Guardian, Storyteller',  desc:['You grow through motion — through discovery, travel, and stepping into the unknown. LUNE is not a destination to you, but a doorway to the next frontier.','You\'re not driven by escape — but curiosity. Wherever you go, you gather truths, lessons, and experience.'] },
 };
 
 const QUESTIONS = [
-  { q:'“ON LUNE 🌕, WHO WOULD BE THE FIRST PERSON YOU THINK OF?”', opts:[
+  { q:'"ON LUNE 🌕, WHO WOULD BE THE FIRST PERSON YOU THINK OF?"', opts:[
     {k:'A',t:'My best friend or partner',                      s:{Storyteller:1,Guardian:1}},
     {k:'B',t:'A mentor or icon who inspires me',               s:{Visionary:1,Alchemist:1}},
     {k:'C',t:'My younger self',                                s:{Dreamer:1,Maker:1}},
     {k:'D',t:'My family or beloved pet',                       s:{Guardian:1,Storyteller:1}},
     {k:'E',t:'No one — I look toward the future',              s:{Visionary:1,Rebel:1}},
   ]},
-  { q:'“WHICH DRINK WOULD YOU MISS THE MOST ON EAU🌏?"', opts:[
+  { q:'"WHICH DRINK WOULD YOU MISS THE MOST ON EAU🌏?"', opts:[
     {k:'A',t:'Latte',               s:{Maker:1}},
     {k:'B',t:'Matcha',              s:{Dreamer:1}},
     {k:'C',t:'Sparkling Yuzu Soda', s:{Alchemist:1}},
     {k:'D',t:'Iced Americano',      s:{Visionary:1}},
     {k:'E',t:'Thai Tea',            s:{Storyteller:1}},
   ]},
-  { q:'“BEFORE LUNE🌕, HOW WOULD YOU DESCRIBE YOUR JOURNEY ON EAU🌏?”', opts:[
+  { q:'"BEFORE LUNE🌕, HOW WOULD YOU DESCRIBE YOUR JOURNEY ON EAU🌏?"', opts:[
     {k:'A',t:'A chapter of quiet regrets — carrying what-ifs you never voiced', s:{Mystic:1,Guardian:1}},
     {k:'B',t:'A season of drifting — moving, but unsure of direction',           s:{Dreamer:1,Explorer:1}},
     {k:'C',t:'A brave pursuit — chasing dreams even when fear walked beside you',s:{Visionary:1,Rebel:1}},
     {k:'D',t:'A healing tide — letting go slowly, finding space to breathe',     s:{Storyteller:1,Guardian:1}},
     {k:'E',t:"A restless spark — knowing you're meant for more",                 s:{Rebel:1,Explorer:1}},
   ]},
-  { q:'“WHEN YOU FIRST SET FOOT ON LUNE🌕, THE SOIL GLOWS UNDER YOUR STEP. WHAT DO YOU DO NEXT?”', opts:[
-    {k:'A',t:'Collect the glowing dust to study it later',     s:{Maker:1,Alchemist:1}},
-    {k:'B',t:'Draw a symbol with your fingertip',              s:{Storyteller:1,Dreamer:1}},
-    {k:'C',t:'Look up — something calls from the sky',         s:{Visionary:1,Mystic:1}},
-    {k:'D',t:'Mark a safe path for whoever lands next',        s:{Guardian:1}},
+  { q:'"WHEN YOU FIRST SET FOOT ON LUNE🌕, THE SOIL GLOWS UNDER YOUR STEP. WHAT DO YOU DO NEXT?"', opts:[
+    {k:'A',t:'Collect the glowing dust to study it later',  s:{Maker:1,Alchemist:1}},
+    {k:'B',t:'Draw a symbol with your fingertip',           s:{Storyteller:1,Dreamer:1}},
+    {k:'C',t:'Look up — something calls from the sky',      s:{Visionary:1,Mystic:1}},
+    {k:'D',t:'Mark a safe path for whoever lands next',     s:{Guardian:1}},
   ]},
-  { q:'“WHAT’S YOUR PLAN ON LUNE🌕?”', opts:[
+  { q:'"WHAT\'S YOUR PLAN ON LUNE🌕?"', opts:[
     {k:'A',t:'I miss my home. I want to go back to EAU', s:{Guardian:1,Storyteller:1}},
     {k:'B',t:"I'll take a leap and stay awhile",         s:{Alchemist:1,Visionary:1}},
     {k:'C',t:'I want to explore every crater and secret',s:{Dreamer:1,Explorer:1}},
     {k:'D',t:"I'll build a new world here",              s:{Maker:1,Rebel:1}},
   ]},
-  { q:'“A VOICE FROM EAU🌏 ECHOES: ‘WHAT DO YOU WISH TO BRING BACK?’”', opts:[
-    {k:'A',t:'A seed of new light, to plant on EAU',          s:{Alchemist:1,Visionary:1}},
-    {k:'B',t:'A melody from the stars',                       s:{Storyteller:1,Dreamer:1}},
-    {k:'C',t:"The formula of LUNE's air — it feels alive",    s:{Maker:1,Alchemist:1}},
-    {k:'D',t:'The strength I found in silence',               s:{Mystic:1,Guardian:1}},
+  { q:'"A VOICE FROM EAU🌏 ECHOES: \'WHAT DO YOU WISH TO BRING BACK?\'"', opts:[
+    {k:'A',t:'A seed of new light, to plant on EAU',       s:{Alchemist:1,Visionary:1}},
+    {k:'B',t:'A melody from the stars',                    s:{Storyteller:1,Dreamer:1}},
+    {k:'C',t:"The formula of LUNE's air — it feels alive", s:{Maker:1,Alchemist:1}},
+    {k:'D',t:'The strength I found in silence',            s:{Mystic:1,Guardian:1}},
   ]},
-  { q:'“UNDER LUNE🌕’S QUIET LIGHT, WHAT DO YOU WISH TO BUILD OR BECOME?”', opts:[
+  { q:'"UNDER LUNE🌕\'S QUIET LIGHT, WHAT DO YOU WISH TO BUILD OR BECOME?"', opts:[
     {k:'A',t:'A bridge of light connecting wanderers who feel lost', s:{Storyteller:1,Guardian:1}},
     {k:'B',t:'A workshop that crafts dreams into reality',           s:{Maker:1,Alchemist:1}},
     {k:'C',t:'A tower that watches the shifting stars',              s:{Visionary:1}},
     {k:'D',t:'A garden of moons where ideas can bloom',              s:{Dreamer:1,Mystic:1}},
   ]},
-  { q:'“THE PATH TO YOUR DREAM FADES IN THE DARK. HOW WILL YOU KEEP MOVING FORWARD?”', opts:[
-    {k:'A',t:'Trust the rhythm inside me — one step at a time',          s:{Dreamer:1,Storyteller:1}},
-    {k:'B',t:'Sketch a new plan when the old one collapses',              s:{Maker:1,Alchemist:1}},
-    {k:'C',t:'Light a torch for others to see their way',                 s:{Visionary:1,Guardian:1}},
+  { q:'"THE PATH TO YOUR DREAM FADES IN THE DARK. HOW WILL YOU KEEP MOVING FORWARD?"', opts:[
+    {k:'A',t:'Trust the rhythm inside me — one step at a time',         s:{Dreamer:1,Storyteller:1}},
+    {k:'B',t:'Sketch a new plan when the old one collapses',             s:{Maker:1,Alchemist:1}},
+    {k:'C',t:'Light a torch for others to see their way',                s:{Visionary:1,Guardian:1}},
     {k:'D',t:'Listen to the silence — it always whispers the next move', s:{Mystic:1,Dreamer:1}},
   ]},
   { q:'WHAT DO YOU DO?', isEvent:true, opts:[
-    {k:'A',t:'Shield myself and wait for it to pass',   s:{Guardian:1}},
-    {k:'B',t:'Run forward, trusting my instincts',      s:{Explorer:1,Rebel:1}},
-    {k:'C',t:'Study the falling pattern to find a path',s:{Visionary:1,Maker:1}},
-    {k:'D',t:'Use a nearby crystal to create a barrier',s:{Alchemist:1}},
+    {k:'A',t:'Shield myself and wait for it to pass',    s:{Guardian:1}},
+    {k:'B',t:'Run forward, trusting my instincts',       s:{Explorer:1,Rebel:1}},
+    {k:'C',t:'Study the falling pattern to find a path', s:{Visionary:1,Maker:1}},
+    {k:'D',t:'Use a nearby crystal to create a barrier', s:{Alchemist:1}},
   ]},
-  { q:'“BEFORE RETURNING, YOU MAY LEAVE ONE SIGN ON LUNE🌕. WHAT WOULD IT BE?”', opts:[
-    {k:'A',t:'A luminous sculpture that hums in the wind',      s:{Maker:1,Storyteller:1}},
-    {k:'B',t:'A written vow carved into stone',                  s:{Guardian:1,Storyteller:1}},
-    {k:'C',t:'A map guiding others toward the unknown horizon',  s:{Explorer:1,Visionary:1}},
-    {k:'D',t:'Nothing — my presence here is enough',            s:{Mystic:1,Dreamer:1}},
+  { q:'"BEFORE RETURNING, YOU MAY LEAVE ONE SIGN ON LUNE🌕. WHAT WOULD IT BE?"', opts:[
+    {k:'A',t:'A luminous sculpture that hums in the wind',     s:{Maker:1,Storyteller:1}},
+    {k:'B',t:'A written vow carved into stone',                s:{Guardian:1,Storyteller:1}},
+    {k:'C',t:'A map guiding others toward the unknown horizon',s:{Explorer:1,Visionary:1}},
+    {k:'D',t:'Nothing — my presence here is enough',          s:{Mystic:1,Dreamer:1}},
   ]},
 ];
 
@@ -550,14 +549,27 @@ function buildDots() {
   if (bar) bar.style.width = (cp / PAGES.length * 100) + '%';
 }
 
+function quizBack() {
+  // intro2 → back to intro1
+  const intro2 = document.getElementById('q-intro2');
+  if (intro2 && intro2.style.display !== 'none') {
+    intro2.style.display = 'none';
+    document.getElementById('q-intro').style.display = 'flex';
+    btnStart(true); btnBack(false); btnNext('hide');
+    return;
+  }
+  if (cp <= 0) return;
+  cp--; sel = null;
+  renderPage();
+}
+
 function quizStart() {
   Object.keys(ARCHETYPES).forEach(k => scores[k] = 0);
   cp = 0; sel = null;
   document.getElementById('q-intro').style.display = 'none';
-  document.getElementById('q-start-btn').className = 'pxbtn';
-  document.getElementById('q-next-btn').className = 'pxbtn';
+  document.getElementById('q-intro2').style.display = 'flex';
+  btnStart(false); btnBack(true); btnNext('show'); // intro2: both visible & active
   buildDots();
-  renderPage();
 }
 
 function renderPage() {
@@ -567,10 +579,11 @@ function renderPage() {
   const wrap = document.getElementById('q-wrap');
   wrap.style.display = 'block';
   document.getElementById('q-scroll').scrollTop = 0;
+  btnBack(true);
   if (page.type === 'story') {
     document.getElementById('q-win-label').textContent = 'LUNECHILD';
     wrap.innerHTML = `<div class="story-page"><img src="${page.img}" alt="story" onerror="this.parentElement.style.background='#222';this.style.display='none'"></div>`;
-    document.getElementById('q-next-btn').className = 'pxbtn show';
+    btnNext('show'); // story: NEXT active
   } else {
     const q = QUESTIONS[page.q];
     const qNum = page.q + 1;
@@ -578,17 +591,26 @@ function renderPage() {
     const eventHTML = q.isEvent ? `<div class="q-event-flag on"><span class="q-event-star">★</span><span class="q-event-txt">MINI EVENT — Something unexpected happens!</span></div>` : '';
     const optsHTML = q.opts.map((o, i) => `<button class="q-opt" onclick="pickOpt(${i},this)"><span class="ok">${o.k}</span><span class="ov">${o.t}</span></button>`).join('');
     wrap.innerHTML = `<div class="q-slide">${eventHTML}<div class="q-illus"><img src="${Q_IMGS[page.q]}" alt="Q${qNum}" onerror="this.style.opacity='0.3'"><span class="q-illus-num">Q${qNum}</span></div><p class="q-text">${q.q}</p><div class="q-opts">${optsHTML}</div></div>`;
-    document.getElementById('q-next-btn').className = 'pxbtn';
+    btnNext('dim'); // question: NEXT dimmed until answer picked
   }
 }
 
 function pickOpt(i, btn) {
   document.querySelectorAll('.q-opt').forEach(b => b.classList.remove('on'));
   btn.classList.add('on'); sel = i;
-  document.getElementById('q-next-btn').className = 'pxbtn show';
+  btnNext('show'); // answer picked → NEXT becomes active
 }
 
 function quizNext() {
+  const b = document.getElementById('q-next-btn');
+  if (b.classList.contains('dim')) return; // blocked
+  // intro2 → start quiz
+  const intro2 = document.getElementById('q-intro2');
+  if (intro2 && intro2.style.display !== 'none') {
+    intro2.style.display = 'none';
+    renderPage();
+    return;
+  }
   const page = PAGES[cp];
   if (page.type === 'question') {
     if (sel === null) return;
@@ -611,9 +633,9 @@ function showResult() {
 function retakeQuiz() {
   navigate('quiz-screen'); cp = 0; sel = null; scores = {};
   document.getElementById('q-intro').style.display = 'flex';
+  document.getElementById('q-intro2').style.display = 'none';
   document.getElementById('q-wrap').style.display = 'none';
-  document.getElementById('q-start-btn').className = 'pxbtn show';
-  document.getElementById('q-next-btn').className = 'pxbtn';
+  btnStart(true); btnBack(false); btnNext('hide');
   document.getElementById('qdots').innerHTML = '';
   const bar = document.getElementById('q-bar');
   if (bar) bar.style.width = '0%';
@@ -644,11 +666,18 @@ function saveResult() {
     const cardImage = new Image();
     cardImage.crossOrigin = 'anonymous';
     cardImage.onload = function() {
-      const marginTop = 100, marginSide = 50;
-      const boxW = W - marginSide * 2, boxH = H * 0.60;
+      const marginTop = 40, marginSide = 20;
+      const boxW = W - marginSide * 2, boxH = H * 0.72;
       const scale2 = Math.min(boxW / cardImage.width, boxH / cardImage.height);
       const drawW = cardImage.width * scale2, drawH = cardImage.height * scale2;
       ctx.drawImage(cardImage, marginSide + (boxW - drawW) / 2, marginTop + (boxH - drawH) / 2, drawW, drawH);
+
+      // pixel font watermark
+      ctx.font = '900 12px "Rubik"';
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.textAlign = 'center';
+      ctx.fillText('@conycorn.studio', W / 2, H - 24);
+
       canvas.toBlob(blob => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a'); a.href = url; a.download = 'my-lunechild-archetype.png'; a.click();
