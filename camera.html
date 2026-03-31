@@ -42,16 +42,15 @@ html, body {
   background-repeat: no-repeat; background-color: #1a1a1a;
 }
 .booth-screen-overlay {
-  position: absolute; inset: 0; z-index: 1;
-  background-size: cover; background-position: center top;
-  background-repeat: no-repeat; pointer-events: none;
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  display: flex; align-items: center; justify-content: center;
 }
-
-#booth-home .booth-screen-overlay   { background-image: url('homepage.png'); background-size: cover; background-position: center; }
-#booth-frames .booth-screen-overlay { background-image: url('selectframe.png'); }
-#booth-name .booth-screen-overlay   { background-image: url('writename.png'); }
-#booth-message .booth-screen-overlay{ background-image: url('writeletter.png'); }
-#booth-result .booth-screen-overlay { background-image: url('result.png'); background-size: contain; background-position: top center; }
+.booth-screen-overlay img {
+  max-width: 100%; max-height: 100%;
+  width: auto; height: auto;
+  object-fit: contain; display: block;
+}
+#booth-result .booth-screen-overlay { align-items: flex-start; }
 
 /* ── Buttons ── */
 .b-pixel-btn {
@@ -74,7 +73,7 @@ html, body {
   font-size: 9px; color: #111; outline: none; line-height: 1.8;
 }
 .b-pixel-input::placeholder { color: #aaa; }
-textarea.b-pixel-input { resize: none; min-height: clamp(80px, 18vh, 130px); }
+textarea.b-pixel-input { resize: none; }
 
 /* ── EXIT button ── */
 .btn-exit {
@@ -99,7 +98,6 @@ textarea.b-pixel-input { resize: none; min-height: clamp(80px, 18vh, 130px); }
 /* ── Frame selection ── */
 .b-frame-cards-row {
   position: absolute; z-index: 10; left: 0; right: 0;
-  top: clamp(220px, 46vh, 420px);
   display: flex; justify-content: center; gap: 16px;
 }
 .b-frame-card {
@@ -197,17 +195,14 @@ textarea.b-pixel-input { resize: none; min-height: clamp(80px, 18vh, 130px); }
 @keyframes bFlashAnim { 0%{opacity:0} 15%{opacity:1} 100%{opacity:0} }
 #b-flash-overlay.flash { animation: bFlashAnim 0.4s ease forwards; }
 
-/* ── Name / Message inputs ── */
+/* ── Name / Message inputs — positioned by JS relative to contained image ── */
 #b-name-input-wrap {
   position: absolute; z-index: 10;
-  top: clamp(38%, 46vh, 52%);
-  left: 17.8%; width: 70.5%;
 }
 #b-letter-input-wrap {
   position: absolute; z-index: 10;
-  top: clamp(42%, 47.4vh, 54%);
-  left: 24.1%; width: 55%;
 }
+textarea.b-pixel-input { resize: none; height: 100%; }
 .b-input-btn-row {
   position: absolute; z-index: 10;
   bottom: max(50px, env(safe-area-inset-bottom, 0px) + 50px);
@@ -261,7 +256,7 @@ textarea.b-pixel-input { resize: none; min-height: clamp(80px, 18vh, 130px); }
 <!-- BOOTH HOME -->
 <section id="booth-home" class="booth-screen active">
   <div class="booth-screen-bg"></div>
-  <div class="booth-screen-overlay"></div>
+  <div class="booth-screen-overlay"><img src="homepage.png" alt=""></div>
   <img src="btn-enter.png" class="btn-enter-img" onclick="boothGoTo('booth-frames')"
     ontouchstart="this.style.transform='translate(calc(-50% + 2px), calc(-50% + 2px))'"
     ontouchend="this.style.transform='translate(-50%,-50%)'"
@@ -272,7 +267,7 @@ textarea.b-pixel-input { resize: none; min-height: clamp(80px, 18vh, 130px); }
 <!-- BOOTH FRAME SELECTION -->
 <section id="booth-frames" class="booth-screen">
   <div class="booth-screen-bg"></div>
-  <div class="booth-screen-overlay"></div>
+  <div class="booth-screen-overlay"><img id="overlay-frames" src="selectframe.png" alt=""></div>
   <div class="b-frame-cards-row">
     <div class="b-frame-card" id="bfcard-1" onclick="boothSelectFrame(1)">
       <img src="frame_01.png" alt="Frame 1" />
@@ -313,7 +308,7 @@ textarea.b-pixel-input { resize: none; min-height: clamp(80px, 18vh, 130px); }
 <!-- BOOTH NAME INPUT -->
 <section id="booth-name" class="booth-screen">
   <div class="booth-screen-bg"></div>
-  <div class="booth-screen-overlay"></div>
+  <div class="booth-screen-overlay"><img id="overlay-name" src="writename.png" alt=""></div>
   <div id="b-name-input-wrap">
     <input type="text" class="b-pixel-input" id="b-input-name" placeholder="your name..." maxlength="30" autocomplete="off" />
   </div>
@@ -326,7 +321,7 @@ textarea.b-pixel-input { resize: none; min-height: clamp(80px, 18vh, 130px); }
 <!-- BOOTH LETTER INPUT -->
 <section id="booth-message" class="booth-screen">
   <div class="booth-screen-bg"></div>
-  <div class="booth-screen-overlay"></div>
+  <div class="booth-screen-overlay"><img id="overlay-message" src="writeletter.png" alt=""></div>
   <div id="b-letter-input-wrap">
     <textarea class="b-pixel-input" id="b-input-message" placeholder="write your message..." maxlength="250"></textarea>
   </div>
@@ -339,7 +334,7 @@ textarea.b-pixel-input { resize: none; min-height: clamp(80px, 18vh, 130px); }
 <!-- BOOTH RESULT -->
 <section id="booth-result" class="booth-screen">
   <div class="booth-screen-bg"></div>
-  <div class="booth-screen-overlay"></div>
+  <div class="booth-screen-overlay"><img src="result.png" alt=""></div>
   <div class="b-r-overlay" id="b-r-message"></div>
   <div class="b-r-overlay" id="b-r-from"></div>
   <div id="b-film-strip">
@@ -370,10 +365,94 @@ const boothState = { selectedFrame:null, photos:[], playerName:'', playerMessage
 let BOOTH_TOTAL_SHOTS = 3;
 let boothVideoStream = null, boothShotsTaken = 0, boothIsCapturing = false;
 
+/*
+  positionOverlayElements()
+  Reads the actual rendered rect of each overlay <img> (contain-scaled),
+  then places inputs/cards at fractional positions within that rect.
+
+  Cropped image sizes:
+    writename.png   705 × 847
+    writeletter.png 705 × 847
+    selectframe.png 705 × 857
+
+  Measured positions (in px on original cropped canvas):
+    writename  — input box:  top=415, left=100, w=510, h=210
+    writeletter— textarea:   top=330, left=185, w=375, h=430
+    selectframe— cards row:  top=390 (center of cards area)
+*/
+function positionOverlayElements() {
+  function imgRect(imgEl) {
+    if (!imgEl) return null;
+    const r = imgEl.getBoundingClientRect();
+    const pr = imgEl.closest('.booth-screen').getBoundingClientRect();
+    return {
+      top:  r.top  - pr.top,
+      left: r.left - pr.left,
+      w: r.width,
+      h: r.height
+    };
+  }
+
+  // writename
+  const nameImg = document.getElementById('overlay-name');
+  if (nameImg && nameImg.complete) {
+    const R = imgRect(nameImg);
+    if (R) {
+      const IH = 847, IW = 705;
+      const wrap = document.getElementById('b-name-input-wrap');
+      wrap.style.top    = (R.top  + R.h * (415/IH)) + 'px';
+      wrap.style.left   = (R.left + R.w * (100/IW)) + 'px';
+      wrap.style.width  = (R.w * (510/IW)) + 'px';
+      wrap.style.height = (R.h * (210/IH)) + 'px';
+    }
+  }
+
+  // writeletter
+  const msgImg = document.getElementById('overlay-message');
+  if (msgImg && msgImg.complete) {
+    const R = imgRect(msgImg);
+    if (R) {
+      const IH = 847, IW = 705;
+      const wrap = document.getElementById('b-letter-input-wrap');
+      wrap.style.top    = (R.top  + R.h * (330/IH)) + 'px';
+      wrap.style.left   = (R.left + R.w * (185/IW)) + 'px';
+      wrap.style.width  = (R.w * (375/IW)) + 'px';
+      wrap.style.height = (R.h * (430/IH)) + 'px';
+    }
+  }
+
+  // selectframe — center the cards row vertically in the pink area
+  const framesImg = document.getElementById('overlay-frames');
+  if (framesImg && framesImg.complete) {
+    const R = imgRect(framesImg);
+    if (R) {
+      const IH = 857, IW = 705;
+      const row = document.querySelector('.b-frame-cards-row');
+      // cards centered at ~y=390 in the image, transform: translateY(-50%) to center them
+      row.style.top = (R.top + R.h * (390/IH)) + 'px';
+      row.style.transform = 'translateY(-50%)';
+    }
+  }
+}
+
+// Re-run on resize / orientation change
+window.addEventListener('resize', positionOverlayElements);
+// Run once on load for the initial active screen
+window.addEventListener('load', positionOverlayElements);
+
 function boothGoTo(id) {
   document.querySelectorAll('.booth-screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   if (id === 'booth-camera') boothInitCamera();
+  // Wait for layout + image to be ready, then position
+  requestAnimationFrame(() => {
+    const screen = document.getElementById(id);
+    const img = screen.querySelector('.booth-screen-overlay img');
+    if (img && !img.complete) {
+      img.onload = positionOverlayElements;
+    }
+    positionOverlayElements();
+  });
 }
 
 function boothSelectFrame(num) {
@@ -643,6 +722,59 @@ function wrapText(ctx, text, maxWidth) {
   if (line) lines.push(line);
   return lines;
 }
+
+/* ─────────────────────────────────────────
+   positionOverlayElements()
+   Overlay PNGs use background-size: contain.
+   Image natural size: selectframe=705×857,
+   writename/writeletter=705×847.
+   We calculate the rendered rect (contain-scaled,
+   centered) and place inputs exactly over it.
+   ───────────────────────────────────────── */
+function positionOverlayElements() {
+  function containRect(containerW, containerH, imgW, imgH) {
+    const scale = Math.min(containerW / imgW, containerH / imgH);
+    const rw = imgW * scale, rh = imgH * scale;
+    const ox = (containerW - rw) / 2;
+    const oy = (containerH - rh) / 2;
+    return { ox, oy, rw, rh };
+  }
+
+  // writename.png (705×847): white input box
+  // measured on cropped image: top=415, left=99, w=510, h=245 out of 705×847
+  const nameScreen = document.getElementById('booth-name');
+  if (nameScreen.classList.contains('active')) {
+    const { ox, oy, rw, rh } = containRect(nameScreen.offsetWidth, nameScreen.offsetHeight, 705, 847);
+    const wrap = document.getElementById('b-name-input-wrap');
+    wrap.style.top    = (oy + rh * (415 / 847)) + 'px';
+    wrap.style.left   = (ox + rw * (99  / 705)) + 'px';
+    wrap.style.width  = (rw * (510 / 705)) + 'px';
+    wrap.style.height = (rh * (245 / 847)) + 'px';
+  }
+
+  // writeletter.png (705×847): white paper textarea
+  // measured: top=330, left=183, w=370, h=430 out of 705×847
+  const msgScreen = document.getElementById('booth-message');
+  if (msgScreen.classList.contains('active')) {
+    const { ox, oy, rw, rh } = containRect(msgScreen.offsetWidth, msgScreen.offsetHeight, 705, 847);
+    const wrap = document.getElementById('b-letter-input-wrap');
+    wrap.style.top    = (oy + rh * (330 / 847)) + 'px';
+    wrap.style.left   = (ox + rw * (183 / 705)) + 'px';
+    wrap.style.width  = (rw * (370 / 705)) + 'px';
+    wrap.style.height = (rh * (430 / 847)) + 'px';
+  }
+
+  // selectframe.png (705×857): frame cards sit in pink area
+  // measured: pink area cards row at y=390 out of 857
+  const frameScreen = document.getElementById('booth-frames');
+  if (frameScreen.classList.contains('active')) {
+    const { oy, rh } = containRect(frameScreen.offsetWidth, frameScreen.offsetHeight, 705, 857);
+    const row = frameScreen.querySelector('.b-frame-cards-row');
+    row.style.top = (oy + rh * (390 / 857)) + 'px';
+  }
+}
+
+window.addEventListener('resize', positionOverlayElements);
 
 function boothRestart() {
   boothState.selectedFrame = null; boothState.photos = []; boothState.playerName = ''; boothState.playerMessage = '';
