@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Lunechild Photobooth</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Special+Elite&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -221,7 +222,7 @@ textarea.b-pixel-input { resize: none; height: 100%; }
   overflow: hidden; transform: rotate(-3deg); transform-origin: top left;
 }
 #b-r-from {
-  left: 45%; top: 51.4%; width: 30.8%;
+  left: 44%; top: 51.4%; width: 30.8%;
   font-family: 'Special Elite', serif; font-size: clamp(7px, 1.8vw, 9px);
   color: #2a2018; font-style: italic;
   transform: rotate(-3deg); transform-origin: top left;
@@ -701,6 +702,13 @@ function boothSaveResult() {
 
   const finish = () => {
     actions.style.display = '';
+
+    // watermark
+    ctx.font = '500 12px "Rubik", sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    ctx.textAlign = 'center';
+    ctx.fillText('@conycorn.studio', W / 2, H - 20);
+
     canvas.toBlob(blob => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href = url;
