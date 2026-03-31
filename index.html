@@ -202,7 +202,7 @@ body {
   -webkit-tap-highlight-color: transparent; text-align: left; width: 100%; min-height: 52px;
 }
 .q-opt:active { transform: translate(2px,2px); box-shadow: none; }
-.q-opt.on { background: #edf1ef; border-color: #edf1ef; }
+.q-opt.on { background: #e87ca0; border-color: #e87ca0; }
 .ok {
   font-family: var(--pixel); font-size: 11px; font-weight: 700; color: #888; flex-shrink: 0;
   width: 22px; height: 22px; background: #edf1ef; border: 1px solid #bbb;
@@ -211,7 +211,7 @@ body {
 }
 .q-opt.on .ok { background: #969eb5; color: #fff; border-color: #969eb5; box-shadow: 1px 1px 0 rgba(255,255,255,0.3) inset; }
 .ov { font-family: var(--vt); font-size: 12px; color: #2a2a2a; line-height: 1.4; flex: 1; }
-.q-opt.on .ov { color: #3a2860; }
+.q-opt.on .ov { color: #fff; }
 
 .overlay { position: absolute; inset: 0; z-index: 100; background: rgba(0,0,0,0.78); display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.22s ease; }
 .overlay.open { opacity: 1; pointer-events: all; }
@@ -313,15 +313,9 @@ body {
     <img id="result-card-img" src="" alt="Your Archetype"
       style="width:100%; height:100%; object-fit:contain; display:block;">
   </div>
-  <div class="action-bar" style="margin-top: 12px;">
-    <button class="pxbtn show" onclick="saveResult()" style="background:none; border:none; box-shadow:none; padding:0;">
-      <img src="btn-save.png" style="height:48px; display:block;"
-        onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=&quot;font-family:Rubik,sans-serif;font-size:12px;font-weight:600;background:#edf1ef;border:2px solid #19191c;padding:14px 24px;box-shadow:4px 4px 0 #555;&quot;>SAVE LUNECHILD</span>'">
-    </button>
-    <button class="pxbtn show" onclick="retakeQuiz()" style="background:none; border:none; box-shadow:none; padding:0;">
-      <img src="btn-retake.png" style="height:48px; display:block;"
-        onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=&quot;font-family:Rubik,sans-serif;font-size:12px;font-weight:600;background:#edf1ef;border:2px solid #19191c;padding:14px 24px;box-shadow:4px 4px 0 #555;&quot;>↺ RETAKE</span>'">
-    </button>
+  <div class="action-bar" style="margin-top: 12px; flex-direction: column; gap: 8px;">
+    <button class="pxbtn show" onclick="saveResult()">SAVE ↓</button>
+    <button class="pxbtn show" onclick="retakeQuiz()" style="background:#f4a8c0;">↺ RETAKE</button>
   </div>
 </div>
 
