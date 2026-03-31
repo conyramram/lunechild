@@ -221,7 +221,7 @@ textarea.b-pixel-input { resize: none; height: 100%; }
   overflow: hidden; transform: rotate(-3deg); transform-origin: top left;
 }
 #b-r-from {
-  left: 48.7%; top: 51.4%; width: 30.8%;
+  left: 45%; top: 51.4%; width: 30.8%;
   font-family: 'Special Elite', serif; font-size: clamp(7px, 1.8vw, 9px);
   color: #2a2018; font-style: italic;
   transform: rotate(-3deg); transform-origin: top left;
@@ -598,7 +598,7 @@ function boothConfirmMessage() {
 function boothBuildResult() {
   const frameFile = BOOTH_FRAMES[boothState.selectedFrame] || BOOTH_FRAMES[1];
   document.getElementById('b-r-message').textContent = boothState.playerMessage;
-  document.getElementById('b-r-from').textContent = boothState.playerName;
+  document.getElementById('b-r-from').textContent = 'from. ' + boothState.playerName;
 
   const strip = document.getElementById('b-film-strip');
   if (boothState.selectedFrame === 3) {
