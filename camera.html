@@ -640,6 +640,16 @@ function boothSaveResult() {
     bgImg.src = 'bg.png';
   };
 
+  // Snapshot DOM positions BEFORE hiding anything — these are ground truth
+  const sectionRect = section.getBoundingClientRect();
+  function domPos(el) {
+    const r = el.getBoundingClientRect();
+    return { x: r.left - sectionRect.left, y: r.top - sectionRect.top, w: r.width, h: r.height };
+  }
+  const msgPos  = domPos(document.getElementById('b-r-message'));
+  const fromPos = domPos(document.getElementById('b-r-from'));
+  const stripPos = domPos(document.getElementById('b-film-strip'));
+
   const drawOverlay = () => {
     const ovImg = new Image(); ovImg.crossOrigin = 'anonymous';
     ovImg.onload = () => {
@@ -652,25 +662,32 @@ function boothSaveResult() {
   };
 
   const drawText = () => {
+    const msgEl  = document.getElementById('b-r-message');
+    const fromEl = document.getElementById('b-r-from');
+    const fontSize = parseFloat(getComputedStyle(msgEl).fontSize) || 8;
+
     ctx.save();
-    ctx.translate(W * 0.308, H * 0.40); ctx.rotate(-3 * Math.PI / 180);
-    ctx.font = `${Math.round(W * 0.02)}px "Special Elite", serif`; ctx.fillStyle = '#2a2018';
-    wrapText(ctx, document.getElementById('b-r-message').textContent, W * 0.372)
-      .forEach((line, i) => ctx.fillText(line, 0, i * Math.round(W * 0.02) * 1.7));
+    ctx.translate(msgPos.x, msgPos.y);
+    ctx.rotate(-3 * Math.PI / 180);
+    ctx.font = `${fontSize}px "Special Elite", serif`; ctx.fillStyle = '#2a2018';
+    wrapText(ctx, msgEl.textContent, msgPos.w)
+      .forEach((line, i) => ctx.fillText(line, 0, fontSize + i * fontSize * 1.7));
     ctx.restore();
+
     ctx.save();
-    ctx.font = `italic ${Math.round(W * 0.02)}px "Special Elite", serif`; ctx.fillStyle = '#2a2018';
-    ctx.translate(W * 0.477, H * 0.509); ctx.rotate(-3 * Math.PI / 180);
-    ctx.fillText(document.getElementById('b-r-from').textContent, 0, 0);
+    ctx.translate(fromPos.x, fromPos.y);
+    ctx.rotate(-3 * Math.PI / 180);
+    ctx.font = `italic ${fontSize}px "Special Elite", serif`; ctx.fillStyle = '#2a2018';
+    ctx.fillText(fromEl.textContent, 0, fontSize);
     ctx.restore();
     drawFilmStrip();
   };
 
   const drawFilmStrip = () => {
-    const stripL = W * 0.656, stripT = H * 0.218, stripW = W * 0.30;
+    const stripL = stripPos.x, stripT = stripPos.y, stripW = stripPos.w;
     const padV = 22, padH = 16, gapH = 5, slotH = 80;
     const n = boothState.photos.length;
-    const totalH = padV + slotH * n + gapH * (n - 1) + padV;
+    const totalH = stripPos.h || (padV + slotH * n + gapH * (n - 1) + padV);
     ctx.save();
     ctx.translate(stripL, stripT); ctx.rotate(4 * Math.PI / 180);
     ctx.beginPath(); ctx.rect(0, 0, stripW, totalH); ctx.clip();
