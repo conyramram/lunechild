@@ -7,13 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>Pack for Lune</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap" rel="stylesheet">
+  <!-- Rubik:wght@500 added for watermark font -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&family=Rubik:wght@500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-/* ════════════════════════════════════════════
-   STYLE.CSS — Pack for Lune
-   📱 Phone-first, portrait-only layout
-════════════════════════════════════════════ */
-
 :root {
   --sky:        #0d0d1a;
   --sky-mid:    #1a1a2e;
@@ -27,26 +24,20 @@
   --btn-hover:  #6d5cc9;
   --card-bg:    rgba(255,255,255,0.07);
   --border:     rgba(167,139,250,0.3);
-
   --safe-top:    env(safe-area-inset-top,    0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 *, *::before, *::after {
-  margin: 0;
-  padding: 0;
+  margin: 0; padding: 0;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 }
 
-html {
-  height: 100%;
-  overflow: hidden;
-}
+html { height: 100%; overflow: hidden; }
 
 body {
-  width: 100vw;
-  height: 100dvh;
+  width: 100vw; height: 100dvh;
   min-height: -webkit-fill-available;
   overflow: hidden;
   background: var(--sky);
@@ -58,756 +49,316 @@ body {
 }
 
 .page {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100dvh;
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding-top:    var(--safe-top);
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100dvh;
+  display: none; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding-top: var(--safe-top);
   padding-bottom: var(--safe-bottom);
 }
-
 .page.active { display: flex; }
 
-
-/* ════════════════════════════════════════════
-   PAGE 1 — INTRO
-════════════════════════════════════════════ */
-
+/* ── PAGE 1 ── */
 #page-intro {
-  background: #6b7280;
-  cursor: pointer;
-  user-select: none;
-  -webkit-user-select: none;
-  justify-content: center;
-  align-items: center;
+  background: #6b7280; cursor: pointer;
+  user-select: none; -webkit-user-select: none;
+  justify-content: center; align-items: center;
 }
-
 .intro-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100dvh;
-  object-fit: fill;
-  z-index: 0;
-  image-rendering: pixelated;
+  position: absolute; top: 0; left: 0;
+  width: 100vw; height: 100dvh;
+  object-fit: fill; z-index: 0; image-rendering: pixelated;
 }
-
 .intro-dialog {
-  position: relative;
-  z-index: 2;
+  position: relative; z-index: 2;
   width: clamp(200px, 60vw, 260px);
   border: 2.5px solid #1a1a1a;
-  box-shadow:
-    2px 2px 0 #ffffff inset,
-    -2px -2px 0 #7a7a8a inset,
-    4px 4px 0 rgba(0,0,0,0.35);
-  background: transparent;
-  image-rendering: pixelated;
+  box-shadow: 2px 2px 0 #ffffff inset, -2px -2px 0 #7a7a8a inset, 4px 4px 0 rgba(0,0,0,0.35);
+  background: transparent; image-rendering: pixelated;
 }
-
 .dialog-titlebar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between;
   background: #8b8fa8;
   box-shadow: inset 1px 1px 0 #b0b4c8, inset -1px -1px 0 #5a5e74;
-  padding: 5px 6px 5px 10px;
-  gap: 8px;
+  padding: 5px 6px 5px 10px; gap: 8px;
 }
-
 .dialog-title {
   font-family: 'Press Start 2P', monospace;
-  font-size: clamp(6px, 2vw, 8px);
-  color: #f0f0f0;
-  letter-spacing: 0.5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: clamp(6px, 2vw, 8px); color: #f0f0f0;
+  letter-spacing: 0.5px; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
 }
-
-.dialog-btns {
-  display: flex;
-  gap: 4px;
-  flex-shrink: 0;
-}
-
+.dialog-btns { display: flex; gap: 4px; flex-shrink: 0; }
 .dialog-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: clamp(18px, 5.5vw, 24px);
-  height: clamp(18px, 5.5vw, 24px);
-  background: #9b9fb8;
-  border: 1.5px solid #1a1a1a;
-  box-shadow:
-    1px 1px 0 #c8ccdc inset,
-    -1px -1px 0 #5a5e74 inset;
+  display: flex; align-items: center; justify-content: center;
+  width: clamp(18px, 5.5vw, 24px); height: clamp(18px, 5.5vw, 24px);
+  background: #9b9fb8; border: 1.5px solid #1a1a1a;
+  box-shadow: 1px 1px 0 #c8ccdc inset, -1px -1px 0 #5a5e74 inset;
   font-family: 'Press Start 2P', monospace;
-  font-size: clamp(5px, 1.8vw, 7px);
-  color: #1a1a1a;
-  cursor: pointer;
-  line-height: 1;
+  font-size: clamp(5px, 1.8vw, 7px); color: #1a1a1a; cursor: pointer; line-height: 1;
 }
-
 .dialog-body {
   background: #f0f0ec;
-  box-shadow:
-    -1px -1px 0 #ffffff inset,
-    1px 1px 0 #a0a4b8 inset;
-  padding: 14px 14px 18px;
-  min-height: clamp(100px, 22vh, 160px);
-  position: relative;
+  box-shadow: -1px -1px 0 #ffffff inset, 1px 1px 0 #a0a4b8 inset;
+  padding: 14px 14px 18px; min-height: clamp(100px, 22vh, 160px); position: relative;
 }
-
 .dialog-text {
   font-family: 'Press Start 2P', monospace;
-  font-size: clamp(7px, 2.2vw, 10px);
-  color: #2a2a3a;
-  line-height: 2;
-  display: inline;
-  word-break: break-word;
+  font-size: clamp(7px, 2.2vw, 10px); color: #2a2a3a;
+  line-height: 2; display: inline; word-break: break-word;
 }
-
 .dialog-cursor {
   font-family: 'Press Start 2P', monospace;
-  font-size: clamp(7px, 2.2vw, 10px);
-  color: #2a2a3a;
-  animation: blink 0.8s step-start infinite;
-  display: inline;
+  font-size: clamp(7px, 2.2vw, 10px); color: #2a2a3a;
+  animation: blink 0.8s step-start infinite; display: inline;
 }
-
 @keyframes blink { 50% { opacity: 0; } }
-
 .dialog-hint {
   margin-top: clamp(16px, 4vw, 24px);
   font-family: 'Press Start 2P', monospace;
-  font-size: clamp(6px, 1.8vw, 8px);
-  color: #6b6f88;
-  text-align: center;
-  animation: fadeIn 0.6s ease forwards;
+  font-size: clamp(6px, 1.8vw, 8px); color: #6b6f88;
+  text-align: center; animation: fadeIn 0.6s ease forwards;
 }
-
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: translateY(0);   }
+  to   { opacity: 1; transform: translateY(0); }
 }
-
 .hidden { display: none !important; }
 
-
-/* ── Pixel Buttons ── */
+/* ── BUTTONS ── */
 .btn-pixel {
   font-family: 'Press Start 2P', monospace;
-  font-size: clamp(8px, 3vw, 11px);
-  color: #f0f1f5;
-  background: var(--btn-bg);
-  border: none;
+  font-size: clamp(8px, 3vw, 11px); color: #f0f1f5;
+  background: var(--btn-bg); border: none;
   padding: clamp(13px, 3.5vw, 16px) clamp(18px, 5vw, 26px);
   cursor: pointer;
-  box-shadow:
-    inset -3px -3px 0 #b0b8b0,
-    inset  3px  3px 0 #edf1ef,
-    0 0 18px rgba(218,223,220,0.3);
+  box-shadow: inset -3px -3px 0 #b0b8b0, inset 3px 3px 0 #edf1ef, 0 0 18px rgba(218,223,220,0.3);
   transition: transform 0.1s, box-shadow 0.1s;
-  letter-spacing: 1px;
-  line-height: 1.6;
-  touch-action: manipulation;
+  letter-spacing: 1px; line-height: 1.6; touch-action: manipulation;
 }
-
 .btn-pixel:active {
   transform: translateY(2px);
-  box-shadow:
-    inset -2px -2px 0 #b0b8b0,
-    inset  2px  2px 0 #edf1ef;
+  box-shadow: inset -2px -2px 0 #b0b8b0, inset 2px 2px 0 #edf1ef;
 }
-
 .btn-small {
   font-size: clamp(7px, 2.5vw, 10px);
   padding: clamp(10px, 2.5vw, 13px) clamp(13px, 4vw, 18px);
 }
-
 .btn-cancel, .btn-secondary {
   background: rgba(255,255,255,0.05);
-  box-shadow:
-    inset -3px -3px 0 rgba(0,0,0,0.3),
-    inset  3px  3px 0 rgba(255,255,255,0.1);
+  box-shadow: inset -3px -3px 0 rgba(0,0,0,0.3), inset 3px 3px 0 rgba(255,255,255,0.1);
   color: var(--text-dim);
 }
 
-
-/* ════════════════════════════════════════════
-   PAGE 2 — ROOM / GAME CANVAS
-════════════════════════════════════════════ */
-
-#page-room {
-  background: #0d0d1a;
-  position: relative;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-}
-
-/* Phone frame — contains canvas + all UI overlays */
-.phone-frame {
-  position: relative;
-  width: 100vw;
-  height: 100dvh;
-  overflow: hidden;
-}
-
-#room-canvas {
-  display: block;
-  image-rendering: pixelated;
-  width: 100%;
-  height: 100%;
-  touch-action: none;
-}
-
+/* ── PAGE 2 ── */
+#page-room { background: #0d0d1a; position: relative; justify-content: center; align-items: center; padding: 0; }
+.phone-frame { position: relative; width: 100vw; height: 100dvh; overflow: hidden; }
+#room-canvas { display: block; image-rendering: pixelated; width: 100%; height: 100%; touch-action: none; }
 .hud {
-  position: absolute;
-  top: calc(10px + var(--safe-top));
-  right: 10px;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-  max-width: 80%;
+  position: absolute; top: calc(10px + var(--safe-top)); right: 10px;
+  z-index: 10; display: flex; flex-direction: column;
+  align-items: flex-end; gap: 4px; max-width: 80%;
 }
-
 .hud-items {
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(7px, 2.8vw, 10px);
-  color: var(--moon);
-  background: rgba(13,13,26,0.88);
-  padding: 6px 10px;
-  border: 1px solid var(--border);
-  backdrop-filter: blur(4px);
-  white-space: nowrap;
+  font-family: 'Press Start 2P', monospace; font-size: clamp(7px, 2.8vw, 10px);
+  color: var(--moon); background: rgba(13,13,26,0.88);
+  padding: 6px 10px; border: 1px solid var(--border);
+  backdrop-filter: blur(4px); white-space: nowrap;
 }
-
-.hud-hint {
-  font-size: clamp(13px, 4vw, 16px);
-  color: var(--text-dim);
-  padding: 3px 8px;
-  text-align: right;
-  line-height: 1.3;
-}
-
+.hud-hint { font-size: clamp(13px, 4vw, 16px); color: var(--text-dim); padding: 3px 8px; text-align: right; line-height: 1.3; }
 .btn-finish {
-  position: absolute;
-  bottom: calc(20px + var(--safe-bottom));
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  white-space: nowrap;
+  position: absolute; bottom: calc(20px + var(--safe-bottom));
+  left: 50%; transform: translateX(-50%);
+  z-index: 25; white-space: nowrap;
   animation: pulse 2s ease-in-out infinite;
+  touch-action: manipulation; pointer-events: all;
 }
-
 @keyframes pulse {
   0%, 100% { box-shadow: inset -3px -3px 0 #b0b8b0, inset 3px 3px 0 #edf1ef, 0 0 12px rgba(237,241,239,0.3); }
   50%       { box-shadow: inset -3px -3px 0 #b0b8b0, inset 3px 3px 0 #edf1ef, 0 0 28px rgba(237,241,239,0.7); }
 }
-
-.dpad {
-  display: none !important;
-}
-
+.dpad { display: none !important; }
 .dpad-btn {
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(12px, 4vw, 16px);
-  background: rgba(76,61,143,0.75);
-  color: var(--moon);
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  touch-action: manipulation;
-  user-select: none;
-  -webkit-user-select: none;
-  cursor: pointer;
+  font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 4vw, 16px);
+  background: rgba(76,61,143,0.75); color: var(--moon);
+  border: 1px solid var(--border); border-radius: 3px;
+  display: flex; align-items: center; justify-content: center;
+  touch-action: manipulation; user-select: none; -webkit-user-select: none; cursor: pointer;
 }
-
 .dpad-btn:active { background: var(--btn-hover); }
-
 .dpad-up    { grid-column: 2; grid-row: 1; }
 .dpad-left  { grid-column: 1; grid-row: 2; }
 .dpad-down  { grid-column: 2; grid-row: 3; }
 .dpad-right { grid-column: 3; grid-row: 2; }
 
-/* ── Item Popup ── */
+/* ── POPUP ── */
 .item-popup {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  z-index: 20;
-  display: flex;
-  justify-content: center;
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 20;
+  display: flex; justify-content: center;
   background: linear-gradient(to top, rgba(13,13,26,0.95) 60%, transparent);
   padding: 16px 16px calc(16px + var(--safe-bottom));
   animation: slideUp 0.2s ease;
 }
-
-@keyframes slideUp {
-  from { transform: translateY(16px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
-}
-
-.popup-inner {
-  position: relative;
-  width: 100%;
-  max-width: 400px;
-}
-
-.popup-frame-img {
-  display: block;
-  width: 100%;
-  height: auto;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-}
-
+.item-popup.hidden { display: none !important; pointer-events: none !important; }
+@keyframes slideUp { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.popup-inner { position: relative; width: 100%; max-width: 400px; }
+.popup-frame-img { display: block; width: 100%; height: auto; image-rendering: pixelated; image-rendering: crisp-edges; }
 .popup-content {
-  position: absolute;
-  top: 12%;
-  left: 8%;
-  right: 8%;
-  bottom: 8%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  text-align: center;
-  gap: 4px;
+  position: absolute; top: 12%; left: 8%; right: 8%; bottom: 8%;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: space-between; text-align: center; gap: 4px;
 }
-
 .popup-icon-wrap {
-  position: relative;
-  width: clamp(52px, 16vw, 72px);
-  height: clamp(52px, 16vw, 72px);
+  position: relative; width: clamp(52px, 16vw, 72px); height: clamp(52px, 16vw, 72px);
+  display: flex; align-items: center; justify-content: center;
+}
+.popup-icon-bg { display: none; }
+.popup-icon { position: relative; z-index: 1; font-size: clamp(24px, 8vw, 36px); line-height: 1; }
+.popup-name { font-family: 'Press Start 2P', monospace; font-size: clamp(7px, 2.5vw, 10px); color: #55556b; line-height: 1.6; }
+.popup-desc { font-size: clamp(13px, 4vw, 17px); color: var(--text-dim); line-height: 1.5; }
+.popup-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.btn-ui { background: none; border: none; padding: 0; cursor: pointer; touch-action: manipulation; width: clamp(90px, 28vw, 130px); transition: transform 0.1s, opacity 0.1s; }
+.btn-ui img { width: 100%; height: auto; display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+.btn-ui:active { transform: translateY(2px); opacity: 0.85; }
+
+/* ── PAGE 2.5 ── */
+#page-goodluck {
+  background: url('assets/result/background.png') center center / cover no-repeat;
+  image-rendering: pixelated;
+}
+
+.goodluck-content {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-.popup-icon-bg {
-  display: none;
-}
-
-.popup-icon {
-  position: relative;
-  z-index: 1;
-  font-size: clamp(24px, 8vw, 36px);
-  line-height: 1;
-}
-
-.popup-name {
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(7px, 2.5vw, 10px);
-  color: #55556b;
-  line-height: 1.6;
-}
-
-.popup-desc {
-  font-size: clamp(13px, 4vw, 17px);
-  color: var(--text-dim);
-  line-height: 1.5;
-}
-
-.popup-btns {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.btn-ui {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  touch-action: manipulation;
-  width: clamp(90px, 28vw, 130px);
-  transition: transform 0.1s, opacity 0.1s;
-}
-
-.btn-ui img {
+  gap: clamp(16px, 4vh, 32px);
+  text-align: center;
   width: 100%;
+  height: 100%;
+}
+
+.rocket-img {
+  width: clamp(100px, 35vw, 180px);
   height: auto;
-  display: block;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
+  animation: float 3s ease-in-out infinite;
 }
 
-.btn-ui:active {
-  transform: translateY(2px);
-  opacity: 0.85;
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-18px); }
 }
 
+.goodluck-text {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(12px, 4vw, 20px);
+  color: var(--text-light);
+  letter-spacing: 1px;
+}
 
-/* ════════════════════════════════════════════
-   PAGE 3 — RESULT SCREEN
-════════════════════════════════════════════ */
+.goodluck-btn {
+  white-space: nowrap;
+}
 
+/* ── PAGE 3 ── */
 #page-result {
-  background: url('assets/result/background.png') center center / 390px 844px no-repeat;
+  background: url('assets/result/background.png') center center / cover no-repeat;
   image-rendering: pixelated;
-  image-rendering: crisp-edges;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  justify-content: center !important;
-  align-items: center !important;
-  padding: 16px;
+  overflow: hidden; justify-content: center; align-items: center; padding: 0;
 }
-
-.result-content {
+.result-card-wrap {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: clamp(12px, 2.5vh, 20px);
+  width: 100%; height: 100dvh;
+  padding: clamp(16px, 4vw, 32px);
+}
+.result-card-inner {
   position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(12px, 2.5vh, 18px);
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
+  width: min(92vw, 92vh);
+  max-width: min(92vw, 92vh);
+  aspect-ratio: 1 / 1;
 }
-
-/* ── Win95-style packing result window ── */
-.pack-window {
-  width: 100%;
-  max-width: 320px;
-  border: 2.5px solid #6b7280;
-  box-shadow:
-    2px 2px 0 #fff inset,
-    -2px -2px 0 #7a7a8a inset,
-    4px 4px 0 rgba(86,87,88,0.4);
-  image-rendering: pixelated;
-}
-
-.pack-titlebar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #969eb5;
-  box-shadow: inset 1px 1px 0 #abb2c9, inset -1px -1px 0 #848ca5;
-  padding: 5px 6px 5px 10px;
-}
-
-.pack-title {
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(6px, 2vw, 9px);
-  color: #f0f0f0;
-  letter-spacing: 1px;
-}
-
-.pack-titlebar-btns {
-  display: flex;
-  gap: 3px;
-}
-
-.pack-wbtn {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 7px;
-  color: #1a1a1a;
-  background: #9b9fb8;
-  border: 1.5px solid #1a1a1a;
-  box-shadow: 1px 1px 0 #c8ccdc inset, -1px -1px 0 #5a5e74 inset;
-  width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: default;
-}
-
-.pack-body {
-  background: #edf1ef;
-  box-shadow: -1px -1px 0 #fff inset, 1px 1px 0 #a0a4b8 inset;
-  padding: 12px;
-}
-
-.pack-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.pack-tile {
-  background: #d5d7e7;
-  border: 2px solid #1a1a1a;
-  box-shadow: 1px 1px 0 #fff inset, -1px -1px 0 #7a7a8a inset;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 6px 6px;
-  gap: 4px;
-  aspect-ratio: 1;
-}
-
-.pack-tile-img {
-  width: 60%;
-  height: auto;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-}
-
-.pack-tile-emoji {
-  font-size: clamp(28px, 9vw, 40px);
-  line-height: 1;
-}
-
-.pack-tile-label {
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(5px, 1.6vw, 7px);
-  color: #2a2a3a;
-  text-align: center;
-  line-height: 1.5;
-  word-break: break-word;
-}
-
-.result-btns {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding-bottom: 4px;
-}
-
-
-/* ── HUD top row (slots + hint button) ── */
-.hud-top-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-/* ── Packing slots (inside HUD top-right) ── */
-.pack-slots {
-  display: flex;
-  flex-direction: row;
-  gap: 4px;
-}
-
-.pack-slot {
-  width: clamp(24px, 7vw, 34px);
-  height: clamp(24px, 7vw, 34px);
-  background: rgba(13,13,26,0.7);
-  border: 2px solid #969eb5;
-  box-shadow: inset 1px 1px 0 #abb2c9, inset -1px -1px 0 #848ca5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  image-rendering: pixelated;
-}
-
-.pack-slot img {
-  width: 80%;
-  height: 80%;
+.result-card-img {
+  display: block; width: 100%; height: 100%;
   object-fit: contain;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
+  image-rendering: pixelated; image-rendering: crisp-edges;
 }
-
-.pack-slot.filled {
-  background: rgba(150,158,181,0.25);
-  border-color: #edf1ef;
-}
-.btn-hint {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #f0f1f5;
-  background: #969eb5;
-  border: none;
-  width: 28px;
-  height: 28px;
-  cursor: pointer;
-  box-shadow:
-    inset -2px -2px 0 #b0b8b0,
-    inset  2px  2px 0 #edf1ef;
-  flex-shrink: 0;
-  touch-action: manipulation;
-}
-.btn-hint:active {
-  transform: translateY(1px);
-  box-shadow:
-    inset -1px -1px 0 #b0b8b0,
-    inset  1px  1px 0 #edf1ef;
-}
-
-/* ── Hint window ── */
-.hint-window {
+.result-flavor-overlay {
   position: absolute;
-  top: calc(60px + var(--safe-top));
-  right: 10px;
-  z-index: 30;
-  width: clamp(160px, 50vw, 220px);
-  border: 2px solid #6b7280;
-  box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
-  animation: slideDown 0.15s ease;
+  top: 80%; left: 11%; right: 48%; height: 11%;
+  display: flex; align-items: center; justify-content: flex-start;
+  padding: 0 2%; pointer-events: none;
 }
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.hint-titlebar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #969eb5;
-  padding: 5px 6px 5px 10px;
-  box-shadow: inset 1px 1px 0 #abb2c9, inset -1px -1px 0 #848ca5;
-}
-
-.hint-title {
+.result-flavor-overlay span {
   font-family: 'Press Start 2P', monospace;
-  font-size: clamp(5px, 1.8vw, 7px);
-  color: #f0f0f0;
-  letter-spacing: 1px;
+  font-size: clamp(3px, 2.2vw, 14px);
+  color: #ffffff; line-height: 1.2;
+  text-align: left; word-break: break-word; hyphens: auto;
 }
+.result-btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 
-.hint-close {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 7px;
-  color: #1a1a1a;
-  background: #9b9fb8;
-  border: 1.5px solid #1a1a1a;
-  box-shadow: 1px 1px 0 #c8ccdc inset, -1px -1px 0 #5a5e74 inset;
-  width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  touch-action: manipulation;
-}
+/* Legacy */
+.result-content { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: clamp(12px, 2.5vh, 18px); width: 100%; max-width: 400px; text-align: center; }
+.pack-window { width: 100%; max-width: 320px; border: 2.5px solid #6b7280; box-shadow: 2px 2px 0 #fff inset, -2px -2px 0 #7a7a8a inset, 4px 4px 0 rgba(86,87,88,0.4); image-rendering: pixelated; }
+.pack-titlebar { display: flex; align-items: center; justify-content: space-between; background: #969eb5; box-shadow: inset 1px 1px 0 #abb2c9, inset -1px -1px 0 #848ca5; padding: 5px 6px 5px 10px; }
+.pack-title { font-family: 'Press Start 2P', monospace; font-size: clamp(6px, 2vw, 9px); color: #f0f0f0; letter-spacing: 1px; }
+.pack-titlebar-btns { display: flex; gap: 3px; }
+.pack-wbtn { font-family: 'Press Start 2P', monospace; font-size: 7px; color: #1a1a1a; background: #9b9fb8; border: 1.5px solid #1a1a1a; box-shadow: 1px 1px 0 #c8ccdc inset, -1px -1px 0 #5a5e74 inset; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; cursor: default; }
+.pack-body { background: #edf1ef; box-shadow: -1px -1px 0 #fff inset, 1px 1px 0 #a0a4b8 inset; padding: 12px; }
+.pack-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pack-tile { background: #d5d7e7; border: 2px solid #1a1a1a; box-shadow: 1px 1px 0 #fff inset, -1px -1px 0 #7a7a8a inset; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 6px 6px; gap: 4px; aspect-ratio: 1; }
+.pack-tile-img { width: 60%; height: auto; image-rendering: pixelated; image-rendering: crisp-edges; }
+.pack-tile-emoji { font-size: clamp(28px, 9vw, 40px); line-height: 1; }
+.pack-tile-label { font-family: 'Press Start 2P', monospace; font-size: clamp(5px, 1.6vw, 7px); color: #2a2a3a; text-align: center; line-height: 1.5; word-break: break-word; }
 
-.hint-body {
-  background: #edf1ef;
-  padding: 8px;
-  max-height: 45vh;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
+/* ── HUD ── */
+.hud-top-row { display: flex; align-items: center; gap: 6px; }
+.pack-slots { display: flex; flex-direction: row; gap: 4px; }
+.pack-slot { width: clamp(24px, 7vw, 34px); height: clamp(24px, 7vw, 34px); background: rgba(13,13,26,0.7); border: 2px solid #969eb5; box-shadow: inset 1px 1px 0 #abb2c9, inset -1px -1px 0 #848ca5; display: flex; align-items: center; justify-content: center; image-rendering: pixelated; }
+.pack-slot img { width: 80%; height: 80%; object-fit: contain; image-rendering: pixelated; image-rendering: crisp-edges; }
+.pack-slot.filled { background: rgba(150,158,181,0.25); border-color: #edf1ef; }
+.btn-hint { font-family: 'Press Start 2P', monospace; font-size: 10px; color: #f0f1f5; background: #969eb5; border: none; width: 28px; height: 28px; cursor: pointer; box-shadow: inset -2px -2px 0 #b0b8b0, inset 2px 2px 0 #edf1ef; flex-shrink: 0; touch-action: manipulation; }
+.btn-hint:active { transform: translateY(1px); box-shadow: inset -1px -1px 0 #b0b8b0, inset 1px 1px 0 #edf1ef; }
 
-.hint-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(5px, 1.6vw, 7px);
-  color: #2a2a3a;
-  padding: 4px 6px;
-  background: #d5d7e7;
-  border: 1.5px solid #9a9db8;
-  line-height: 1.6;
-}
+/* ── HINT WINDOW ── */
+.hint-window { position: absolute; top: calc(60px + var(--safe-top)); right: 10px; z-index: 30; width: clamp(160px, 50vw, 220px); border: 2px solid #6b7280; box-shadow: 3px 3px 0 rgba(0,0,0,0.4); animation: slideDown 0.15s ease; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+.hint-titlebar { display: flex; align-items: center; justify-content: space-between; background: #969eb5; padding: 5px 6px 5px 10px; box-shadow: inset 1px 1px 0 #abb2c9, inset -1px -1px 0 #848ca5; }
+.hint-title { font-family: 'Press Start 2P', monospace; font-size: clamp(5px, 1.8vw, 7px); color: #f0f0f0; letter-spacing: 1px; }
+.hint-close { font-family: 'Press Start 2P', monospace; font-size: 7px; color: #1a1a1a; background: #9b9fb8; border: 1.5px solid #1a1a1a; box-shadow: 1px 1px 0 #c8ccdc inset, -1px -1px 0 #5a5e74 inset; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; touch-action: manipulation; }
+.hint-body { background: #edf1ef; padding: 8px; max-height: 45vh; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+.hint-item { display: flex; align-items: center; gap: 6px; font-family: 'Press Start 2P', monospace; font-size: clamp(5px, 1.6vw, 7px); color: #2a2a3a; padding: 4px 6px; background: #d5d7e7; border: 1.5px solid #9a9db8; line-height: 1.6; }
+.hint-item.packed { opacity: 0.4; text-decoration: line-through; }
+.hint-item-icon { width: 20px; height: 20px; object-fit: contain; image-rendering: pixelated; flex-shrink: 0; }
 
-.hint-item.packed {
-  opacity: 0.4;
-  text-decoration: line-through;
-}
+/* ── LANDSCAPE ── */
+#rotate-msg { display: none; position: fixed; inset: 0; z-index: 9999; background: var(--sky); flex-direction: column; align-items: center; justify-content: center; gap: 20px; text-align: center; padding: 32px; }
+#rotate-msg .rotate-icon { font-size: 52px; animation: spin90 1.5s ease-in-out infinite alternate; }
+@keyframes spin90 { from { transform: rotate(0deg); } to { transform: rotate(-90deg); } }
+#rotate-msg p { font-family: 'Press Start 2P', monospace; font-size: clamp(9px, 3vw, 12px); color: var(--text-dim); line-height: 1.9; }
 
-.hint-item-icon {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-  image-rendering: pixelated;
-  flex-shrink: 0;
-}
-
-/* ════════════════════════════════════════════
-   LANDSCAPE LOCK
-════════════════════════════════════════════ */
-#rotate-msg {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: var(--sky);
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  text-align: center;
-  padding: 32px;
-}
-
-#rotate-msg .rotate-icon {
-  font-size: 52px;
-  animation: spin90 1.5s ease-in-out infinite alternate;
-}
-
-@keyframes spin90 {
-  from { transform: rotate(0deg);   }
-  to   { transform: rotate(-90deg); }
-}
-
-#rotate-msg p {
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(9px, 3vw, 12px);
-  color: var(--text-dim);
-  line-height: 1.9;
-}
-
-
-/* ════════════════════════════════════════════
-   DESKTOP VIEW
-════════════════════════════════════════════ */
+/* ── DESKTOP ── */
 @media (hover: hover) and (pointer: fine) {
-
   .dpad { display: none; }
-
   .btn-finish { bottom: 28px; }
-
-  .phone-frame {
-    width: 390px;
-    height: 844px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border: 2px solid var(--border);
-    box-shadow: 0 0 60px rgba(167,139,250,0.15);
-  }
-
-  #room-canvas {
-    width: 390px;
-    height: 844px;
-  }
-
-  .intro-bg {
-    width: 390px;
-    height: 844px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border: 2px solid var(--border);
-    box-shadow: 0 0 60px rgba(167,139,250,0.15);
-  }
-
-  .intro-content,
-  .result-content {
-    max-width: 390px;
-  }
+  .phone-frame { width: 390px; height: 844px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 2px solid var(--border); box-shadow: 0 0 60px rgba(167,139,250,0.15); }
+  #room-canvas { width: 390px; height: 844px; }
+  .intro-bg { width: 390px; height: 844px; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 2px solid var(--border); box-shadow: 0 0 60px rgba(167,139,250,0.15); }
+  .intro-content, .result-content { max-width: 390px; }
+  .result-card-wrap { max-width: 390px; margin: 0 auto; }
 }
 </style>
-  <script defer src="https://cloud.umami.is/script.js" data-website-id="a52735c1-1082-4a1a-92cc-740639db5fee"></script>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="a52735c1-1082-4a1a-92cc-740639db5fee"></script>
 </head>
 <body>
 
-  <!-- ══════════════════════════════════════════
-       PAGE 1: INTRO SCREEN
-  ══════════════════════════════════════════ -->
+  <!-- CHANGE 2: Hidden span forces browser to load Rubik font before canvas uses it -->
+  <span style="font-family:'Rubik';font-weight:500;position:absolute;opacity:0;pointer-events:none;font-size:1px;">.</span>
+
   <div id="page-intro" class="page active">
     <img class="intro-bg" src="assets/intro/background.png" alt="" aria-hidden="true" />
     <div class="intro-dialog">
@@ -821,32 +372,15 @@ body {
       <div class="dialog-body">
         <p class="dialog-text" id="intro-text"></p>
         <span class="dialog-cursor" id="dialog-cursor">▌</span>
-        <p class="dialog-hint hidden" id="dialog-hint">
-          — click to continue —
-        </p>
+        <p class="dialog-hint hidden" id="dialog-hint">— click to continue —</p>
       </div>
     </div>
   </div>
 
-
-  <!-- ══════════════════════════════════════════
-       PAGE 2: ROOM EXPLORATION
-  ══════════════════════════════════════════ -->
   <div id="page-room" class="page">
     <div class="phone-frame" id="phone-frame">
-
       <canvas id="room-canvas"></canvas>
-
-      <!-- Back to home button -->
-      <button onclick="window.parent.navigate('home')" style="
-        position:absolute; top:10px; left:10px; z-index:50;
-        font-family:'Press Start 2P',monospace; font-size:7px;
-        background:rgba(13,13,26,0.85); color:#e0d7ff;
-        border:1px solid rgba(167,139,250,0.4); padding:6px 10px;
-        cursor:pointer; letter-spacing:0.05em;
-      ">✕ EXIT</button>
-
-      <!-- HUD: top-right — pack slots + hint button -->
+      <button onclick="window.parent.navigate('home')" style="position:absolute;top:10px;left:10px;z-index:50;font-family:'Press Start 2P',monospace;font-size:7px;background:rgba(13,13,26,0.85);color:#e0d7ff;border:1px solid rgba(167,139,250,0.4);padding:6px 10px;cursor:pointer;letter-spacing:0.05em;">✕ EXIT</button>
       <div class="hud">
         <div class="hud-top-row">
           <div class="pack-slots" id="pack-slots">
@@ -859,8 +393,6 @@ body {
         </div>
         <div class="hud-hint" id="hud-hint">Choose what matters most to you.</div>
       </div>
-
-      <!-- Hint window -->
       <div class="hint-window hidden" id="hint-window">
         <div class="hint-titlebar">
           <span class="hint-title">ITEMS IN ROOM</span>
@@ -868,13 +400,7 @@ body {
         </div>
         <div class="hint-body" id="hint-body"></div>
       </div>
-
-      <!-- Finish button -->
-      <button class="btn-pixel btn-finish hidden" id="btn-finish" onclick="finishPacking()">
-        ✓ Finish Packing
-      </button>
-
-      <!-- Item popup -->
+      <button class="btn-pixel btn-finish hidden" id="btn-finish" onclick="finishPacking()">✓ Finish Packing</button>
       <div class="item-popup hidden" id="item-popup">
         <div class="popup-inner">
           <img class="popup-frame-img" src="assets/ui/popup_frame.png" alt="" aria-hidden="true" />
@@ -886,107 +412,69 @@ body {
             <div class="popup-name" id="popup-name">Item Name</div>
             <div class="popup-desc" id="popup-desc">A short description.</div>
             <div class="popup-btns">
-              <button class="btn-ui" id="btn-pack" onclick="packItem()">
-                <img src="assets/ui/btn_pack.png" alt="Pack It" />
-              </button>
-              <button class="btn-ui btn-ui--leave" onclick="closePopup()">
-                <img src="assets/ui/btn_leave.png" alt="Leave It" />
-              </button>
+              <button class="btn-ui" id="btn-pack" onclick="packItem()"><img src="assets/ui/btn_pack.png" alt="Pack It" /></button>
+              <button class="btn-ui btn-ui--leave" onclick="closePopup()"><img src="assets/ui/btn_leave.png" alt="Leave It" /></button>
             </div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
 
-    </div><!-- end phone-frame -->
-  </div><!-- end page-room -->
+  <div id="page-goodluck" class="page">
+    <div class="goodluck-content">
+      <img class="rocket-img" src="assets/ui/rocket.png" alt="rocket" />
+      <p class="goodluck-text">Good luck</p>
+      <button class="btn-pixel btn-secondary goodluck-btn" onclick="revealResult()">Unlock your future</button>
+    </div>
+  </div>
 
-
-  <!-- ══════════════════════════════════════════
-       PAGE 3: RESULT SCREEN
-  ══════════════════════════════════════════ -->
   <div id="page-result" class="page">
-    <div class="stars" id="stars2"></div>
-    <div class="moon-glow"></div>
-    <div class="result-content">
-      <div class="pack-window">
-        <div class="pack-titlebar">
-          <span class="pack-title">PACKING</span>
-          <div class="pack-titlebar-btns">
-            <span class="pack-wbtn">─</span>
-            <span class="pack-wbtn">□</span>
-            <span class="pack-wbtn">✕</span>
-          </div>
-        </div>
-        <div class="pack-body">
-          <div class="pack-grid" id="chosen-items"></div>
+    <div class="result-card-wrap">
+      <div class="result-card-inner">
+        <img class="result-card-img" id="result-card-img" src="" alt="" />
+        <div class="result-flavor-overlay">
+          <span id="cosmic-flavor"></span>
         </div>
       </div>
       <div class="result-btns">
-        <button class="btn-pixel" onclick="downloadStoryCard()">
-          Save Story Card
-        </button>
-        <button class="btn-pixel btn-secondary" onclick="restartGame()">
-          Pack Again
-        </button>
+        <button class="btn-pixel btn-small" onclick="downloadStoryCard()">↓ Save Card</button>
+        <button class="btn-pixel btn-small btn-secondary" onclick="restartGame()">↺ Pack Again</button>
       </div>
     </div>
     <canvas id="share-canvas" width="1080" height="1920" style="display:none;"></canvas>
   </div>
 
-
-  <!-- Landscape lock -->
   <div id="rotate-msg">
     <div class="rotate-icon">📱</div>
     <p>Please rotate your<br>phone to portrait<br>to play.</p>
   </div>
 
 <script>
-/* ════════════════════════════════════════════
-   SCRIPT.JS — Pack for Lune
-   
-   This file contains ALL the game logic.
-   Read the comments — they explain every step!
-════════════════════════════════════════════ */
-
-
-/* ─────────────────────────────────────────────
+/* ═══════════════════════════════════════════
    SECTION 1: ITEM DATA
-───────────────────────────────────────────── */
+═══════════════════════════════════════════ */
 const ITEMS = [
-  { id: 1, name: "Clock", emoji: "🕐", desc: "It's been ticking since before you remember.", tag: "memory", rx: 49, ry: 29, sizePct: 0.1 },
-  { id: 2, name: "Favourite Poster", emoji: "🖼️", desc: "You saved up for this. It still means everything.", tag: "love", rx: 38, ry: 29, sizePct: 0.1 },
-  { id: 3, name: "Broken Glass", emoji: "🪟", desc: "You never got around to fixing it.", tag: "memory", rx: 84, ry: 48, sizePct: 0.1 },
-  { id: 4, name: "Bedside Lamp", emoji: "🪔", desc: "You read by this light until you fell asleep.", tag: "comfort", rx: 6.5, ry: 31, sizePct: 5 },
-  { id: 5, name: "Soft Blanket", emoji: "🛏️", desc: "Worn at the edges. It smells like home.", tag: "comfort", rx: 35, ry: 37, sizePct: 5 },
-  { id: 6, name: "Best friend", emoji: "🐱", desc: "A little worn. A little loved. Entirely irreplaceable.", tag: "love", rx: 63, ry: 32, sizePct: 5 },
-  { id: 7, name: "Music Player", emoji: "📻", desc: "Your favourite songs. The ones that understood you.", tag: "comfort", rx: 86, ry: 33, sizePct: 5 },
-  { id: 8, name: "Little Rug", emoji: "🟫", desc: "You always stepped on this barefoot in the morning.", tag: "memory", rx: 27, ry: 49, sizePct: 0.1 },
-  { id: 9, name: "Small Plant", emoji: "🪴", desc: "You kept it alive for two whole years.", tag: "freedom", rx: 90, ry: 61, sizePct: 3 },
-  { id: 10, name: "Football", emoji: "⚽", desc: "Proof that you tried — and it mattered.", tag: "ambition", rx: 59, ry: 84, sizePct: 0.1 },
-  { id: 11, name: "Plushie", emoji: "🧸", desc: "Still sitting where you left it.", tag: "love", rx: 32, ry: 60, sizePct: 5 },
-  { id: 12, name: "Favourite Food", emoji: "🍜", desc: "The smell alone is enough to feel at home.", tag: "comfort", rx: 23, ry: 75, sizePct: 4 },
-  { id: 13, name: "Old Cup", emoji: "☕", desc: "Chipped at the rim. You never replaced it.", tag: "memory", rx: 35, ry: 69, sizePct: 4 },
-  { id: 14, name: "Book", emoji: "📖", desc: "Half-filled with things you haven't said out loud.", tag: "memory", rx: 74, ry: 73, sizePct: 5 },
-  { id: 15, name: "Camera", emoji: "📷", desc: "A photo from a day you never want to forget.", tag: "memory", rx: 85, ry: 73, sizePct: 5 },
+  { id: 1,  name: "Clock",           emoji: "🕐",  desc: "It's been ticking since before you remember.",          tag: "memory",  rx: 49,  ry: 29, sizePct: 0.1 },
+  { id: 2,  name: "Favourite Poster",emoji: "🖼️",  desc: "You saved up for this. It still means everything.",     tag: "love",    rx: 38,  ry: 29, sizePct: 0.1 },
+  { id: 3,  name: "Broken Glass",    emoji: "🪟",  desc: "You never got around to fixing it.",                    tag: "memory",  rx: 84,  ry: 48, sizePct: 0.1 },
+  { id: 4,  name: "Bedside Lamp",    emoji: "🪔",  desc: "You read by this light until you fell asleep.",         tag: "comfort", rx: 6.5, ry: 31, sizePct: 5   },
+  { id: 5,  name: "Soft Blanket",    emoji: "🛏️",  desc: "Worn at the edges. It smells like home.",               tag: "comfort", rx: 35,  ry: 37, sizePct: 5   },
+  { id: 6,  name: "Best friend",     emoji: "🐱",  desc: "A little worn. A little loved. Entirely irreplaceable.",tag: "love",    rx: 63,  ry: 32, sizePct: 5   },
+  { id: 7,  name: "Music Player",    emoji: "📻",  desc: "Your favourite songs. The ones that understood you.",   tag: "comfort", rx: 86,  ry: 33, sizePct: 5   },
+  { id: 8,  name: "Little Rug",      emoji: "🟫",  desc: "You always stepped on this barefoot in the morning.",  tag: "memory",  rx: 27,  ry: 49, sizePct: 0.1 },
+  { id: 9,  name: "Small Plant",     emoji: "🪴",  desc: "You kept it alive for two whole years.",                tag: "freedom", rx: 90,  ry: 61, sizePct: 3   },
+  { id: 10, name: "Football",        emoji: "⚽",  desc: "Proof that you tried — and it mattered.",               tag: "ambition",rx: 59,  ry: 84, sizePct: 0.1 },
+  { id: 11, name: "Plushie",         emoji: "🧸",  desc: "Still sitting where you left it.",                      tag: "love",    rx: 32,  ry: 60, sizePct: 5   },
+  { id: 12, name: "Favourite Food",  emoji: "🍜",  desc: "The smell alone is enough to feel at home.",            tag: "comfort", rx: 23,  ry: 75, sizePct: 4   },
+  { id: 13, name: "Old Cup",         emoji: "☕",  desc: "Chipped at the rim. You never replaced it.",            tag: "memory",  rx: 35,  ry: 69, sizePct: 4   },
+  { id: 14, name: "Book",            emoji: "📖",  desc: "Half-filled with things you haven't said out loud.",    tag: "memory",  rx: 74,  ry: 73, sizePct: 5   },
+  { id: 15, name: "Camera",          emoji: "📷",  desc: "A photo from a day you never want to forget.",          tag: "memory",  rx: 85,  ry: 73, sizePct: 5   },
 ];
 
-
-/* ─────────────────────────────────────────────
-   SECTION 2: ARCHETYPE DEFINITIONS
-───────────────────────────────────────────── */
-const ARCHETYPES = [
-  { id: "dreamer", tags: ["memory"], name: "Nostalgic Dreamer", icon: "🌙", desc: "You carry the past gently, like pressed flowers between book pages. The things you love most are made of moments — soft, quiet, and irreplaceable.", msg: "The moon remembers too. You are not alone in your longing." },
-  { id: "keeper", tags: ["love"], name: "Gentle Keeper", icon: "🌸", desc: "Your heart is the most precious thing you own. You pack love wherever you go — not because it's useful, but because it's everything.", msg: "Carry what you love. It will carry you back." },
-  { id: "explorer", tags: ["freedom"], name: "Quiet Explorer", icon: "🗺️", desc: "You are always a little elsewhere — not restless, but reaching. There is a version of you that has already arrived at every place you've dreamed of.", msg: "The horizon is not an ending. It's a door left open for you." },
-  { id: "nester", tags: ["comfort"], name: "Soft Nester", icon: "🕯️", desc: "Warmth is not just a feeling for you — it's a practice. You build small sanctuaries wherever you are. Lune will be lucky to have you.", msg: "Home is not a place. It's the things you choose to bring." },
-  { id: "builder", tags: ["ambition"], name: "Patient Builder", icon: "⭐", desc: "You believe in becoming. Quietly, steadily, without needing anyone to watch. Your dreams are not loud — they are deep.", msg: "Every star was once just a thought that refused to stop burning." },
-  { id: "moonwalker", tags: ["secret"], name: "Moonwalker", icon: "🌕", desc: "You found what others walked past. You are drawn to what hides in corners — in people, in rooms, in yourself. That is a rare and tender gift.", msg: "The moon has always known your name. Welcome home." }
-];
-
-
-/* ─────────────────────────────────────────────
+/* ═══════════════════════════════════════════
    SECTION 3: GAME STATE
-───────────────────────────────────────────── */
+═══════════════════════════════════════════ */
 const state = {
   playerX: 0, playerY: 0, facing: 0, walkFrame: 0, frameTimer: 0,
   keys: {}, packedItems: [], dismissedItems: [], activeItem: null,
@@ -994,104 +482,72 @@ const state = {
   touch: { up: false, down: false, left: false, right: false },
   targetX: null, targetY: null,
 };
+const SPEED = 2, INTERACT_RADIUS = 50, PLAYER_SIZE = 24, ITEM_SIZE = 52;
 
-const SPEED = 2;
-const INTERACT_RADIUS = 50;
-const PLAYER_SIZE = 24;
-const ITEM_SIZE = 52;
-
-
-/* ─────────────────────────────────────────────
+/* ═══════════════════════════════════════════
    SECTION 4: CANVAS & DRAWING
-───────────────────────────────────────────── */
+═══════════════════════════════════════════ */
 let canvas, ctx;
-
 const IMAGES = {};
-
 const IMAGE_SOURCES = {
   room: 'assets/room/background.png',
-  furn_bed:          'assets/room/furniture/bed.png',
-  furn_nightstand:   'assets/room/furniture/nightstand.png',
-  furn_armchair:     'assets/room/furniture/armchair.png',
-  furn_sofa_right:   'assets/room/furniture/sofa_right.png',
-  furn_rug:          'assets/room/furniture/rug.png',
-  furn_sofa_left:    'assets/room/furniture/sofa_left.png',
-  furn_cabinet:      'assets/room/furniture/cabinet.png',
+  furn_bed: 'assets/room/furniture/bed.png',
+  furn_nightstand: 'assets/room/furniture/nightstand.png',
+  furn_armchair: 'assets/room/furniture/armchair.png',
+  furn_sofa_right: 'assets/room/furniture/sofa_right.png',
+  furn_rug: 'assets/room/furniture/rug.png',
+  furn_sofa_left: 'assets/room/furniture/sofa_left.png',
+  furn_cabinet: 'assets/room/furniture/cabinet.png',
   furn_dining_table: 'assets/room/furniture/dining_table.png',
-  furn_picture1:     'assets/room/furniture/picture1.png',
-  furn_picture2:     'assets/room/furniture/picture2.png',
-  furn_window:       'assets/room/furniture/window.png',
+  furn_picture1: 'assets/room/furniture/picture1.png',
+  furn_picture2: 'assets/room/furniture/picture2.png',
+  furn_window: 'assets/room/furniture/window.png',
   result_bg: 'assets/result/background.png',
   player: 'assets/character/player.png',
-  item_1:  'assets/items/item_1.png',
-  item_2:  'assets/items/item_2.png',
-  item_3:  'assets/items/item_3.png',
-  item_4:  'assets/items/item_4.png',
-  item_5:  'assets/items/item_5.png',
-  item_6:  'assets/items/item_6.png',
-  item_7:  'assets/items/item_7.png',
-  item_8:  'assets/items/item_8.png',
-  item_9:  'assets/items/item_9.png',
-  item_10: 'assets/items/item_10.png',
-  item_11: 'assets/items/item_11.png',
-  item_12: 'assets/items/item_12.png',
-  item_13: 'assets/items/item_13.png',
-  item_14: 'assets/items/item_14.png',
+  item_1:  'assets/items/item_1.png',  item_2:  'assets/items/item_2.png',
+  item_3:  'assets/items/item_3.png',  item_4:  'assets/items/item_4.png',
+  item_5:  'assets/items/item_5.png',  item_6:  'assets/items/item_6.png',
+  item_7:  'assets/items/item_7.png',  item_8:  'assets/items/item_8.png',
+  item_9:  'assets/items/item_9.png',  item_10: 'assets/items/item_10.png',
+  item_11: 'assets/items/item_11.png', item_12: 'assets/items/item_12.png',
+  item_13: 'assets/items/item_13.png', item_14: 'assets/items/item_14.png',
   item_15: 'assets/items/item_15.png',
 };
-
 const FURNITURE = [
-  { img: 'furn_bed', x: 14, y: 28, w: 23, h: 18, collision: { x: 12, y: 28, w: 26, h: 18 } },
-  { img: 'furn_nightstand', x: 1, y: 24, w: 11, h: 11, collision: { x: 1, y: 24, w: 12, h: 11 } },
-  { img: 'furn_armchair', x: 53, y: 26, w: 20, h: 10, collision: { x: 53, y: 26, w: 20, h: 10 } },
-  { img: 'furn_sofa_right', x: 75, y: 26, w: 20, h: 10, collision: { x: 75, y: 26, w: 20, h: 10 } },
-  { img: 'furn_rug', x: 47, y: 39, w: 51, h: 15 },
-  { img: 'furn_sofa_left', x: 9, y: 55, w: 34, h: 9, collision: { x: 9, y: 55, w: 34, h: 9 } },
-  { img: 'furn_cabinet', x: 70, y: 58, w: 29, h: 19, collision: { x: 70, y: 62.2, w: 29, h: 15 } },
-  { img: 'furn_dining_table', x: 9, y: 67, w: 35, h: 12, collision: { x: 9, y: 67, w: 35, h: 12 } },
-  { img: 'furn_picture1', x: 12, y: 17, w: 10, h: 6, collision: null },
-  { img: 'furn_picture2', x: 19, y: 22, w: 6, h: 3, collision: null },
-  { img: 'furn_window', x: 58, y: 10, w: 28, h: 12, collision: null },
+  { img: 'furn_bed',          x: 14, y: 28, w: 23, h: 18, collision: { x: 12,  y: 28,   w: 26, h: 18 } },
+  { img: 'furn_nightstand',   x: 1,  y: 24, w: 11, h: 11, collision: { x: 1,   y: 24,   w: 12, h: 11 } },
+  { img: 'furn_armchair',     x: 53, y: 26, w: 20, h: 10, collision: { x: 53,  y: 26,   w: 20, h: 10 } },
+  { img: 'furn_sofa_right',   x: 75, y: 26, w: 20, h: 10, collision: { x: 75,  y: 26,   w: 20, h: 10 } },
+  { img: 'furn_rug',          x: 47, y: 39, w: 51, h: 15 },
+  { img: 'furn_sofa_left',    x: 9,  y: 55, w: 34, h: 9,  collision: { x: 9,   y: 55,   w: 34, h: 9  } },
+  { img: 'furn_cabinet',      x: 70, y: 58, w: 29, h: 19, collision: { x: 70,  y: 62.2, w: 29, h: 15 } },
+  { img: 'furn_dining_table', x: 9,  y: 67, w: 35, h: 12, collision: { x: 9,   y: 67,   w: 35, h: 12 } },
+  { img: 'furn_picture1',     x: 12, y: 17, w: 10, h: 6,  collision: null },
+  { img: 'furn_picture2',     x: 19, y: 22, w: 6,  h: 3,  collision: null },
+  { img: 'furn_window',       x: 58, y: 10, w: 28, h: 12, collision: null },
 ];
-
 const DEBUG_FURNITURE = false;
-
 const WALL_ZONES = [
-  { x: 0,  y: 0,   w: 100, h: 32.5, label: 'top wall' },
-  { x: 0,  y: 0,   w: 3,   h: 100,  label: 'left wall' },
-  { x: 97, y: 0,   w: 3,   h: 100,  label: 'right wall' },
-  { x: 0,  y: 95,  w: 100, h: 5,    label: 'bottom wall' },
+  { x: 0,  y: 0,  w: 100, h: 32.5, label: 'top wall'    },
+  { x: 0,  y: 0,  w: 3,   h: 100,  label: 'left wall'   },
+  { x: 97, y: 0,  w: 3,   h: 100,  label: 'right wall'  },
+  { x: 0,  y: 95, w: 100, h: 5,    label: 'bottom wall' },
 ];
-
 const DEBUG_WALLS = false;
-
-const SPRITE = {
-  frameW: 101, frameH: 150, frameCount: 4,
-  frameSpeed: 2, drawH: 52, drawW: 35,
-};
-
+const SPRITE = { frameW: 101, frameH: 150, frameCount: 4, frameSpeed: 2, drawH: 52, drawW: 35 };
 const DEBUG_SPRITE = false;
 
-
-/* ─────────────────────────────────────────────
-   IMAGE LOADER
-───────────────────────────────────────────── */
 function loadAllImages() {
   const promises = Object.entries(IMAGE_SOURCES).map(([key, src]) => {
     return new Promise((resolve) => {
       const img = new Image();
       img.src = src;
       img.onload  = () => { IMAGES[key] = img; resolve(); };
-      img.onerror = () => {
-        console.warn(`⚠️ Could not load image: ${src}`);
-        IMAGES[key] = null;
-        resolve();
-      };
+      img.onerror = () => { console.warn(`⚠️ Could not load image: ${src}`); IMAGES[key] = null; resolve(); };
     });
   });
   return Promise.all(promises);
 }
-
 function initCanvas() {
   canvas = document.getElementById('room-canvas');
   ctx = canvas.getContext('2d');
@@ -1099,981 +555,514 @@ function initCanvas() {
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
 }
-
 function resizeCanvas() {
-  canvas.width  = window.innerWidth;
-  canvas.height = window.innerHeight;
-  state.canvasW = canvas.width;
-  state.canvasH = canvas.height;
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  state.canvasW = canvas.width; state.canvasH = canvas.height;
 }
 
-
-/* ─────────────────────────────────────────────
-   DRAWING
-───────────────────────────────────────────── */
 function drawBackground() {
   const W = state.canvasW, H = state.canvasH;
-
-  if (IMAGES.room) {
-    ctx.drawImage(IMAGES.room, 0, 0, W, H);
-  } else {
-    ctx.fillStyle = '#3b2d1e';
-    ctx.fillRect(0, 0, W, H);
-    ctx.strokeStyle = 'rgba(80,55,30,0.4)';
-    ctx.lineWidth = 1;
-    for (let x = 0; x < W; x += 32) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
-    }
-    for (let y = 0; y < H; y += 32) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-    }
+  if (IMAGES.room) { ctx.drawImage(IMAGES.room, 0, 0, W, H); }
+  else {
+    ctx.fillStyle = '#3b2d1e'; ctx.fillRect(0, 0, W, H);
     const wallH = H * 0.45;
-    ctx.fillStyle = '#2d2b55';
-    ctx.fillRect(0, 0, W, wallH);
-    ctx.fillStyle = '#4a3d7a';
-    ctx.fillRect(0, wallH - 4, W, 8);
+    ctx.fillStyle = '#2d2b55'; ctx.fillRect(0, 0, W, wallH);
+    ctx.fillStyle = '#4a3d7a'; ctx.fillRect(0, wallH - 4, W, 8);
     drawWindow(W * 0.5 - 50, wallH * 0.1, 100, wallH * 0.6);
     drawRug(W * 0.3, H * 0.5, W * 0.4, H * 0.25);
   }
-
-  if (DEBUG_WALLS) {
-    ctx.fillStyle = 'rgba(255,50,50,0.3)';
-    ctx.strokeStyle = 'rgba(255,50,50,0.8)';
-    ctx.lineWidth = 2;
-    WALL_ZONES.forEach(zone => {
-      const zx = zone.x/100*W, zy = zone.y/100*H;
-      const zw = zone.w/100*W, zh = zone.h/100*H;
-      ctx.fillRect(zx, zy, zw, zh);
-      ctx.strokeRect(zx, zy, zw, zh);
-      ctx.fillStyle = 'rgba(255,255,255,0.9)';
-      ctx.font = '11px monospace';
-      ctx.textAlign = 'left';
-      ctx.fillText(zone.label, zx + 4, zy + 14);
-      ctx.fillStyle = 'rgba(255,50,50,0.3)';
-    });
-  }
 }
-
 function drawWindow(x, y, w, h) {
-  ctx.fillStyle = '#1a1a2e';
-  ctx.fillRect(x-4, y-4, w+8, h+8);
+  ctx.fillStyle = '#1a1a2e'; ctx.fillRect(x-4, y-4, w+8, h+8);
   const grad = ctx.createLinearGradient(x, y, x, y+h);
-  grad.addColorStop(0, '#0d0d1a');
-  grad.addColorStop(1, '#1a1a3e');
-  ctx.fillStyle = grad;
-  ctx.fillRect(x, y, w, h);
-  ctx.fillStyle = '#fef9c3';
-  ctx.beginPath();
-  ctx.arc(x+w*0.6, y+h*0.3, 14, 0, Math.PI*2);
-  ctx.fill();
-  ctx.fillStyle = '#2d2b55';
-  ctx.fillRect(x+w/2-2, y, 4, h);
-  ctx.fillRect(x, y+h/2-2, w, 4);
-  const glowGrad = ctx.createRadialGradient(x+w/2, y+h, 0, x+w/2, y+h, 120);
-  glowGrad.addColorStop(0, 'rgba(254,249,195,0.12)');
-  glowGrad.addColorStop(1, 'rgba(254,249,195,0)');
-  ctx.fillStyle = glowGrad;
-  ctx.fillRect(x-80, y+h, 260, 180);
+  grad.addColorStop(0, '#0d0d1a'); grad.addColorStop(1, '#1a1a3e');
+  ctx.fillStyle = grad; ctx.fillRect(x, y, w, h);
+  ctx.fillStyle = '#fef9c3'; ctx.beginPath(); ctx.arc(x+w*0.6, y+h*0.3, 14, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#2d2b55'; ctx.fillRect(x+w/2-2, y, 4, h); ctx.fillRect(x, y+h/2-2, w, 4);
 }
-
 function drawRug(x, y, w, h) {
-  ctx.fillStyle = '#4c1d7a';
-  ctx.fillRect(x, y, w, h);
-  ctx.fillStyle = '#6d2b99';
-  ctx.fillRect(x+6, y+6, w-12, h-12);
+  ctx.fillStyle = '#4c1d7a'; ctx.fillRect(x, y, w, h);
+  ctx.fillStyle = '#6d2b99'; ctx.fillRect(x+6, y+6, w-12, h-12);
   ctx.fillStyle = '#a855f7';
   const cx = x+w/2, cy = y+h/2;
-  ctx.beginPath();
-  ctx.moveTo(cx, cy-20);
-  ctx.lineTo(cx+20, cy);
-  ctx.lineTo(cx, cy+20);
-  ctx.lineTo(cx-20, cy);
-  ctx.closePath();
-  ctx.fill();
+  ctx.beginPath(); ctx.moveTo(cx, cy-20); ctx.lineTo(cx+20, cy); ctx.lineTo(cx, cy+20); ctx.lineTo(cx-20, cy); ctx.closePath(); ctx.fill();
 }
-
 function drawPlayer() {
-  const px = state.playerX;
-  const py = state.playerY;
-  const drawX = px - SPRITE.drawW / 2;
-  const drawY = py - SPRITE.drawH;
-
+  const px = state.playerX, py = state.playerY;
+  const drawX = px - SPRITE.drawW / 2, drawY = py - SPRITE.drawH;
   ctx.fillStyle = 'rgba(0,0,0,0.2)';
-  ctx.beginPath();
-  ctx.ellipse(px, py + 3, SPRITE.drawW * 0.45, 5, 0, 0, Math.PI * 2);
-  ctx.fill();
-
+  ctx.beginPath(); ctx.ellipse(px, py + 3, SPRITE.drawW * 0.45, 5, 0, 0, Math.PI * 2); ctx.fill();
   if (IMAGES.player) {
-    const col  = Math.floor(state.walkFrame / SPRITE.frameSpeed) % SPRITE.frameCount;
-    const row  = state.facing;
-    const srcX = col * SPRITE.frameW;
-    const srcY = row * SPRITE.frameH;
-
-    ctx.drawImage(
-      IMAGES.player,
-      srcX, srcY, SPRITE.frameW, SPRITE.frameH,
-      drawX, drawY, SPRITE.drawW, SPRITE.drawH
-    );
-
-    if (DEBUG_SPRITE) {
-      ctx.strokeStyle = '#00ff88';
-      ctx.lineWidth = 1.5;
-      ctx.strokeRect(drawX, drawY, SPRITE.drawW, SPRITE.drawH);
-      ctx.fillStyle = '#00ff88';
-      ctx.font = '10px monospace';
-      ctx.textAlign = 'left';
-      ctx.fillText(`row:${row} col:${col} src:(${srcX},${srcY})`, drawX, drawY - 4);
-    }
+    const col = Math.floor(state.walkFrame / SPRITE.frameSpeed) % SPRITE.frameCount;
+    ctx.drawImage(IMAGES.player, col * SPRITE.frameW, state.facing * SPRITE.frameH, SPRITE.frameW, SPRITE.frameH, drawX, drawY, SPRITE.drawW, SPRITE.drawH);
   } else {
     const size = PLAYER_SIZE;
-    ctx.fillStyle = '#7c6fcd';
-    ctx.fillRect(px-size/3, py-size*0.8, (size/3)*2, size*0.55);
-    ctx.fillStyle = '#fcd9a0';
-    ctx.fillRect(px-size/3+2, py-size*1.2, (size/3)*2-4, size*0.5);
+    ctx.fillStyle = '#7c6fcd'; ctx.fillRect(px-size/3, py-size*0.8, (size/3)*2, size*0.55);
+    ctx.fillStyle = '#fcd9a0'; ctx.fillRect(px-size/3+2, py-size*1.2, (size/3)*2-4, size*0.5);
     ctx.fillStyle = '#374151';
     ctx.fillRect(px-size/3+2, py-size*0.25, size/4, size*0.35);
     ctx.fillRect(px+2, py-size*0.25, size/4, size*0.35);
-
-    if (DEBUG_SPRITE) {
-      ctx.strokeStyle = '#ff4444';
-      ctx.lineWidth = 1.5;
-      ctx.strokeRect(px-size/2, py-size*1.5, size, size*1.5);
-      ctx.fillStyle = '#ff4444';
-      ctx.font = '10px monospace';
-      ctx.textAlign = 'center';
-      ctx.fillText('IMAGE NOT LOADED', px, py-size*1.5-6);
-      ctx.fillText(IMAGE_SOURCES.player, px, py-size*1.5-18);
-    }
-  }
-
-  if (DEBUG_SPRITE) {
-    const loaded = IMAGES.player ? '✓ LOADED' : '✗ FAILED';
-    const colour = IMAGES.player ? '#00ff88' : '#ff4444';
-    ctx.fillStyle = 'rgba(0,0,0,0.7)';
-    ctx.fillRect(8, 8, 300, 54);
-    ctx.fillStyle = colour;
-    ctx.font = 'bold 11px monospace';
-    ctx.textAlign = 'left';
-    ctx.fillText(`player.png  ${loaded}`, 14, 24);
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '10px monospace';
-    ctx.fillText(`path: ${IMAGE_SOURCES.player}`, 14, 38);
-    ctx.fillText(
-      `frame: ${SPRITE.frameW}×${SPRITE.frameH}px  count:${SPRITE.frameCount}  draw:${SPRITE.drawW}×${SPRITE.drawH}`,
-      14, 52
-    );
   }
 }
-
 function draw() {
   ctx.clearRect(0, 0, state.canvasW, state.canvasH);
-  drawBackground();
-  drawDepthSorted();
-  if (DEBUG_FURNITURE) drawFurnitureDebug();
-  if (DEBUG_WALLS)     drawWallDebug();
+  drawBackground(); drawDepthSorted();
 }
-
 function drawDepthSorted() {
   const W = state.canvasW, H = state.canvasH;
   const drawables = [];
-
   FURNITURE.forEach(furn => {
-    const fx = furn.x / 100 * W;
-    const fy = furn.y / 100 * H;
-    const fw = furn.w / 100 * W;
-    const fh = furn.h / 100 * H;
-    const sortY = fy + fh;
-
-    if (furn.img && IMAGES[furn.img]) {
-      drawables.push({
-        sortY,
-        draw: () => ctx.drawImage(IMAGES[furn.img], fx, fy, fw, fh)
-      });
-    }
+    const fx = furn.x/100*W, fy = furn.y/100*H, fw = furn.w/100*W, fh = furn.h/100*H;
+    if (furn.img && IMAGES[furn.img]) drawables.push({ sortY: fy+fh, draw: () => ctx.drawImage(IMAGES[furn.img], fx, fy, fw, fh) });
   });
-
   ITEMS.forEach(item => drawSingleItem(item));
-
   drawables.sort((a, b) => a.sortY - b.sortY);
   drawables.forEach(d => d.draw());
   drawPlayer();
 }
-
 function drawSingleItem(item) {
   const packed = state.packedItems.includes(item.id);
-  const ix = item.rx / 100 * state.canvasW;
-  const iy = item.ry / 100 * state.canvasH;
-
+  const ix = item.rx/100*state.canvasW, iy = item.ry/100*state.canvasH;
   const imgKey = `item_${item.id}`;
-
   const baseSize = (item.sizePct || 10) / 100 * state.canvasW;
-  let drawW = baseSize;
-  let drawH = baseSize;
-
+  let drawW = baseSize, drawH = baseSize;
   if (IMAGES[imgKey]) {
     const nat = IMAGES[imgKey];
-    const natW = nat.naturalWidth  || nat.width  || 1;
-    const natH = nat.naturalHeight || nat.height || 1;
-    if (natW >= natH) {
-      drawW = baseSize;
-      drawH = baseSize * (natH / natW);
-    } else {
-      drawH = baseSize;
-      drawW = baseSize * (natW / natH);
-    }
+    const natW = nat.naturalWidth||nat.width||1, natH = nat.naturalHeight||nat.height||1;
+    if (natW >= natH) { drawW = baseSize; drawH = baseSize*(natH/natW); }
+    else { drawH = baseSize; drawW = baseSize*(natW/natH); }
   }
-
   if (packed) ctx.globalAlpha = 0.3;
-
   const glowR = Math.max(drawW, drawH) * 0.55;
-  const glowColor = packed ? 'rgba(100,100,100,0.1)' : 'rgba(167,139,250,0.18)';
   const glow = ctx.createRadialGradient(ix, iy, 0, ix, iy, glowR);
-  glow.addColorStop(0, glowColor);
+  glow.addColorStop(0, packed ? 'rgba(100,100,100,0.1)' : 'rgba(167,139,250,0.18)');
   glow.addColorStop(1, 'transparent');
-  ctx.fillStyle = glow;
-  ctx.beginPath();
-  ctx.arc(ix, iy, glowR, 0, Math.PI * 2);
-  ctx.fill();
-
-  if (IMAGES[imgKey]) {
-    ctx.drawImage(IMAGES[imgKey], ix - drawW/2, iy - drawH/2, drawW, drawH);
-  } else {
-    ctx.font = `${drawH}px serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(item.emoji, ix, iy);
-  }
-
+  ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(ix, iy, glowR, 0, Math.PI*2); ctx.fill();
+  if (IMAGES[imgKey]) ctx.drawImage(IMAGES[imgKey], ix-drawW/2, iy-drawH/2, drawW, drawH);
+  else { ctx.font = `${drawH}px serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(item.emoji, ix, iy); }
   ctx.globalAlpha = 1.0;
 }
 
-function drawFurnitureDebug() {
-  const W = state.canvasW, H = state.canvasH;
-  FURNITURE.forEach(furn => {
-    if (!furn.collision) return;
-    const cx = furn.collision.x / 100 * W;
-    const cy = furn.collision.y / 100 * H;
-    const cw = furn.collision.w / 100 * W;
-    const ch = furn.collision.h / 100 * H;
-    ctx.fillStyle   = 'rgba(255,140,0,0.25)';
-    ctx.strokeStyle = 'rgba(255,140,0,0.9)';
-    ctx.lineWidth   = 1.5;
-    ctx.fillRect(cx, cy, cw, ch);
-    ctx.strokeRect(cx, cy, cw, ch);
-    const sortY = (furn.y + furn.h) / 100 * H;
-    ctx.strokeStyle = 'rgba(0,200,100,0.7)';
-    ctx.lineWidth   = 1;
-    ctx.setLineDash([5, 4]);
-    ctx.beginPath();
-    ctx.moveTo(furn.x / 100 * W, sortY);
-    ctx.lineTo((furn.x + furn.w) / 100 * W, sortY);
-    ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle = 'rgba(0,200,100,0.9)';
-    ctx.font = '9px monospace';
-    ctx.textAlign = 'left';
-    ctx.fillText('sortY', furn.x / 100 * W + 2, sortY - 2);
-  });
-}
-
-function drawWallDebug() {
-  const W = state.canvasW, H = state.canvasH;
-  ctx.fillStyle   = 'rgba(255,50,50,0.2)';
-  ctx.strokeStyle = 'rgba(255,50,50,0.8)';
-  ctx.lineWidth   = 2;
-  WALL_ZONES.forEach(zone => {
-    const zx = zone.x/100*W, zy = zone.y/100*H;
-    const zw = zone.w/100*W, zh = zone.h/100*H;
-    ctx.fillRect(zx, zy, zw, zh);
-    ctx.strokeRect(zx, zy, zw, zh);
-    ctx.fillStyle = 'rgba(255,255,255,0.9)';
-    ctx.font      = '11px monospace';
-    ctx.textAlign = 'left';
-    ctx.fillText(zone.label, zx + 4, zy + 14);
-    ctx.fillStyle = 'rgba(255,50,50,0.2)';
-  });
-}
-
-
-/* ─────────────────────────────────────────────
+/* ═══════════════════════════════════════════
    SECTION 5: PLAYER MOVEMENT
-───────────────────────────────────────────── */
-
+═══════════════════════════════════════════ */
 function isMoving(dir) {
   if (dir === 'up')    return state.keys['ArrowUp']    || state.keys['w'] || state.keys['W'];
   if (dir === 'down')  return state.keys['ArrowDown']  || state.keys['s'] || state.keys['S'];
   if (dir === 'left')  return state.keys['ArrowLeft']  || state.keys['a'] || state.keys['A'];
   if (dir === 'right') return state.keys['ArrowRight'] || state.keys['d'] || state.keys['D'];
 }
-
 function updatePlayer() {
-  let moved = false;
-  let dx = 0, dy = 0;
-
+  let moved = false, dx = 0, dy = 0;
   if (isMoving('up'))    { dy -= 1; state.facing = 3; moved = true; }
   if (isMoving('down'))  { dy += 1; state.facing = 0; moved = true; }
   if (isMoving('left'))  { dx -= 1; state.facing = 1; moved = true; }
   if (isMoving('right')) { dx += 1; state.facing = 2; moved = true; }
-
-  if (dx !== 0 && dy !== 0) {
-    dx *= 0.7071;
-    dy *= 0.7071;
-  }
-
+  if (dx !== 0 && dy !== 0) { dx *= 0.7071; dy *= 0.7071; }
   if (!moved && state.targetX !== null && state.targetY !== null) {
-    const tdx = state.targetX - state.playerX;
-    const tdy = state.targetY - state.playerY;
-    const dist = Math.sqrt(tdx * tdx + tdy * tdy);
-
+    const tdx = state.targetX - state.playerX, tdy = state.targetY - state.playerY;
+    const dist = Math.sqrt(tdx*tdx + tdy*tdy);
     if (dist > SPEED + 1) {
-      dx = tdx / dist;
-      dy = tdy / dist;
-      moved = true;
-
-      if (Math.abs(tdx) > Math.abs(tdy)) {
-        state.facing = tdx > 0 ? 2 : 1;
-      } else {
-        state.facing = tdy > 0 ? 0 : 3;
-      }
-    } else {
-      state.targetX = null;
-      state.targetY = null;
-    }
+      dx = tdx/dist; dy = tdy/dist; moved = true;
+      if (Math.abs(tdx) > Math.abs(tdy)) state.facing = tdx > 0 ? 2 : 1;
+      else state.facing = tdy > 0 ? 0 : 3;
+    } else { state.targetX = null; state.targetY = null; }
   }
-
-  let newX = state.playerX + dx * SPEED;
-  let newY = state.playerY + dy * SPEED;
-
+  let newX = state.playerX + dx*SPEED, newY = state.playerY + dy*SPEED;
   const margin = 16;
   newX = Math.max(margin, Math.min(state.canvasW - margin, newX));
   newY = Math.max(margin, Math.min(state.canvasH - margin, newY));
-
-  if (!isBlocked(newX, newY)) {
-    state.playerX = newX;
-    state.playerY = newY;
-  } else if (!isBlocked(newX, state.playerY)) {
-    state.playerX = newX;
-  } else if (!isBlocked(state.playerX, newY)) {
-    state.playerY = newY;
-  } else {
-    state.targetX = null;
-    state.targetY = null;
-  }
-
+  if (!isBlocked(newX, newY)) { state.playerX = newX; state.playerY = newY; }
+  else if (!isBlocked(newX, state.playerY)) { state.playerX = newX; }
+  else if (!isBlocked(state.playerX, newY)) { state.playerY = newY; }
+  else { state.targetX = null; state.targetY = null; }
   if (moved) {
     state.frameTimer++;
     if (state.frameTimer >= SPRITE.frameSpeed) {
       state.walkFrame++;
       state.frameTimer = 0;
-      if (state.walkFrame >= SPRITE.frameCount * SPRITE.frameSpeed) {
-        state.walkFrame = 0;
-      }
+      if (state.walkFrame >= SPRITE.frameCount * SPRITE.frameSpeed) state.walkFrame = 0;
     }
-  } else {
-    state.walkFrame  = 0;
-    state.frameTimer = 0;
-  }
-
+  } else { state.walkFrame = 0; state.frameTimer = 0; }
   checkItemProximity();
 }
-
 function isInsideWall(px, py) {
   const W = state.canvasW, H = state.canvasH;
   if (!W || !H) return false;
   return WALL_ZONES.some(zone => {
-    const zx = zone.x / 100 * W;
-    const zy = zone.y / 100 * H;
-    const zw = zone.w / 100 * W;
-    const zh = zone.h / 100 * H;
-    return px >= zx && px <= zx + zw && py >= zy && py <= zy + zh;
+    const zx=zone.x/100*W, zy=zone.y/100*H, zw=zone.w/100*W, zh=zone.h/100*H;
+    return px>=zx && px<=zx+zw && py>=zy && py<=zy+zh;
   });
 }
-
 function isInsideFurniture(px, py) {
   const W = state.canvasW, H = state.canvasH;
   if (!W || !H) return false;
   return FURNITURE.some(furn => {
     if (!furn.collision) return false;
-    const cx = furn.collision.x / 100 * W;
-    const cy = furn.collision.y / 100 * H;
-    const cw = furn.collision.w / 100 * W;
-    const ch = furn.collision.h / 100 * H;
-    return px >= cx && px <= cx + cw && py >= cy && py <= cy + ch;
+    const cx=furn.collision.x/100*W, cy=furn.collision.y/100*H, cw=furn.collision.w/100*W, ch=furn.collision.h/100*H;
+    return px>=cx && px<=cx+cw && py>=cy && py<=cy+ch;
   });
 }
-
-function isBlocked(px, py) {
-  return isInsideWall(px, py) || isInsideFurniture(px, py);
-}
-
+function isBlocked(px, py) { return isInsideWall(px, py) || isInsideFurniture(px, py); }
 function checkItemProximity() {
   if (state.activeItem !== null) return;
   if (state.packedItems.length >= 4) return;
-
   for (const item of ITEMS) {
     if (state.packedItems.includes(item.id)) continue;
-
-    const ix = item.rx / 100 * state.canvasW;
-    const iy = item.ry / 100 * state.canvasH;
-    const dx = state.playerX - ix;
-    const dy = state.playerY - iy;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-
-    if (state.dismissedItems.includes(item.id) && dist > INTERACT_RADIUS * 1.5) {
+    const ix=item.rx/100*state.canvasW, iy=item.ry/100*state.canvasH;
+    const dx=state.playerX-ix, dy=state.playerY-iy;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (state.dismissedItems.includes(item.id) && dist > INTERACT_RADIUS*1.5)
       state.dismissedItems = state.dismissedItems.filter(id => id !== item.id);
-    }
-
     if (state.dismissedItems.includes(item.id)) continue;
-
-    if (dist < INTERACT_RADIUS) {
-      showItemPopup(item);
-      break;
-    }
+    if (dist < INTERACT_RADIUS) { showItemPopup(item); break; }
   }
 }
 
-
-/* ─────────────────────────────────────────────
+/* ═══════════════════════════════════════════
    SECTION 6: ITEM INTERACTION
-───────────────────────────────────────────── */
-
+═══════════════════════════════════════════ */
 function showItemPopup(item) {
   state.activeItem = item;
-
   const iconEl = document.getElementById('popup-icon');
   const imgKey = `item_${item.id}`;
   if (IMAGES[imgKey]) {
     iconEl.innerHTML = '';
     const img = document.createElement('img');
-    img.src   = IMAGES[imgKey].src;
-    img.alt   = item.name;
+    img.src = IMAGES[imgKey].src; img.alt = item.name;
     img.style.cssText = 'width:100%;height:100%;object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges;';
     iconEl.appendChild(img);
-  } else {
-    iconEl.innerHTML = item.emoji;
-  }
-
+  } else { iconEl.innerHTML = item.emoji; }
   document.getElementById('popup-name').textContent = item.name;
-  document.getElementById('popup-desc').textContent = item.secret
-    ? item.desc + ' ...You almost didn\'t see it.'
-    : item.desc;
-
+  document.getElementById('popup-desc').textContent = item.secret ? item.desc + ' ...You almost didn\'t see it.' : item.desc;
   document.getElementById('item-popup').classList.remove('hidden');
 }
-
 function closePopup() {
-  if (state.activeItem) {
-    state.dismissedItems.push(state.activeItem.id);
-  }
+  if (state.activeItem) state.dismissedItems.push(state.activeItem.id);
   state.activeItem = null;
   document.getElementById('item-popup').classList.add('hidden');
 }
-
 function packItem() {
   if (!state.activeItem) return;
   const item = state.activeItem;
-
   if (state.packedItems.includes(item.id)) { closePopup(); return; }
-
   state.packedItems.push(item.id);
-
   const count = state.packedItems.length;
-
   fillPackSlot(item, count - 1);
   refreshHintWindow();
   closePopup();
-
-  const hints = [
-    "What else can't you leave behind?",
-    "3 more to go...",
-    "Almost there...",
-    "That's the one. What else?"
-  ];
-  document.getElementById('hud-hint').textContent =
-    count < 4 ? hints[count - 1] || "Keep going..." : "Your bag is full.";
-
+  const hints = ["What else can't you leave behind?","3 more to go...","Almost there...","That's the one. What else?"];
+  document.getElementById('hud-hint').textContent = count < 4 ? hints[count-1] || "Keep going..." : "Your bag is full.";
   if (count >= 4) {
     document.getElementById('btn-finish').classList.remove('hidden');
-    document.getElementById('hud-hint').textContent =
-      "You're ready. Say goodbye to this room.";
+    document.getElementById('hud-hint').textContent = "You're ready. Say goodbye to this room.";
   }
 }
-
 function fillPackSlot(item, slotIndex) {
   const slot = document.getElementById(`slot-${slotIndex}`);
   if (!slot) return;
-
   const imgKey = `item_${item.id}`;
   if (IMAGES[imgKey]) {
     const img = document.createElement('img');
-    img.src = IMAGES[imgKey].src;
-    img.alt = item.name;
+    img.src = IMAGES[imgKey].src; img.alt = item.name;
     slot.appendChild(img);
-  } else {
-    slot.textContent = item.emoji;
-    slot.style.fontSize = '18px';
-  }
-  slot.classList.add('filled');
-  slot.title = item.name;
+  } else { slot.textContent = item.emoji; slot.style.fontSize = '18px'; }
+  slot.classList.add('filled'); slot.title = item.name;
 }
-
 function clearPackSlots() {
   for (let i = 0; i < 4; i++) {
     const slot = document.getElementById(`slot-${i}`);
     if (!slot) continue;
-    slot.innerHTML = '';
-    slot.classList.remove('filled');
-    slot.style.fontSize = '';
-    slot.title = '';
+    slot.innerHTML = ''; slot.classList.remove('filled'); slot.style.fontSize = ''; slot.title = '';
   }
 }
-
 function toggleHintWindow() {
   const win = document.getElementById('hint-window');
-  if (win.classList.contains('hidden')) {
-    refreshHintWindow();
-    win.classList.remove('hidden');
-  } else {
-    win.classList.add('hidden');
-  }
+  if (win.classList.contains('hidden')) { refreshHintWindow(); win.classList.remove('hidden'); }
+  else win.classList.add('hidden');
 }
-
 function refreshHintWindow() {
   const body = document.getElementById('hint-body');
   if (!body) return;
   body.innerHTML = '';
-
   ITEMS.forEach(item => {
     const isPacked = state.packedItems.includes(item.id);
-
     const row = document.createElement('div');
     row.className = 'hint-item' + (isPacked ? ' packed' : '');
-
     const imgKey = `item_${item.id}`;
     if (IMAGES[imgKey]) {
       const img = document.createElement('img');
-      img.src = IMAGES[imgKey].src;
-      img.alt = item.name;
-      img.className = 'hint-item-icon';
+      img.src = IMAGES[imgKey].src; img.alt = item.name; img.className = 'hint-item-icon';
       row.appendChild(img);
     } else {
       const em = document.createElement('span');
-      em.textContent = item.emoji;
-      em.style.fontSize = '14px';
-      row.appendChild(em);
+      em.textContent = item.emoji; em.style.fontSize = '14px'; row.appendChild(em);
     }
-
     const label = document.createElement('span');
     label.textContent = item.name + (isPacked ? ' ✓' : '');
     row.appendChild(label);
-
     body.appendChild(row);
   });
 }
 
+/* ═══════════════════════════════════════════
+   SECTION 7: COSMIC ROLE + ARCHETYPE SCORING
+═══════════════════════════════════════════ */
+const ITEM_ARCHETYPE_VOTE = {
+  1:"mystic", 2:"dreamer", 3:"alchemist", 4:"storyteller",
+  5:"guardian", 6:"explorer", 7:"rebel", 8:"guardian",
+  9:"maker", 10:"visionary", 11:"guardian", 12:"alchemist",
+  13:"storyteller", 14:"dreamer", 15:"maker",
+};
 
-/* ─────────────────────────────────────────────
-   SECTION 7: ARCHETYPE SCORING
-───────────────────────────────────────────── */
+const ITEM_TO_ROLE = {
+  1: { title:"Time Keeper", skill:"bend hours to your will", flavors:{ dreamer:"Hehe… I don't follow time,\nI move when it feels right.", visionary:"Mm! I'm already ahead of now!", maker:"Ta-da! Deadlines bend for me!", storyteller:"Shh… time slows for good stories.", alchemist:"Ooh! 3am is my golden hour!", guardian:"Hey! I'm always on time when it matters!", rebel:"Hmph! I don't follow the clock!", mystic:"Hmm… I hear time before it moves.", explorer:"Yay! Every timezone's an adventure!" } },
+  2: { title:"Lune's Main Character Stan", skill:"make someone's art your whole identity", flavors:{ dreamer:"Hehe~ they don't know me but they changed everything.", visionary:"Mm! I became who I am because of them.", maker:"Ta-da! I made my whole era out of their energy!", storyteller:"Shh… every lyric is a memory I actually lived.", alchemist:"Ooh! I turn their art into my own fuel!", guardian:"Hey! I will defend them with my whole chest!!", rebel:"Hmph! I loved them before everyone else did.", mystic:"Hmm… I felt them find me, not the other way around.", explorer:"Yay! I'd go anywhere just to be in the same room." } },
+  3: { title:"Fragment Seer", skill:"find meaning in the broken parts", flavors:{ dreamer:"sees beauty in what others call damage", visionary:"breaks things to rebuild them better", maker:"turns every crack into a new design", storyteller:"the break is always the most interesting chapter", alchemist:"this is literally their natural habitat", guardian:"survived it and kept others safe through it too", rebel:"thrives where structure no longer exists", mystic:"knew it had to break before it could mean something", explorer:"maps the damage like new territory" } },
+  4: { title:"Light Keeper", skill:"illuminate what others miss", flavors:{ dreamer:"soft light only, always, forever", visionary:"every bulb placed with intention", maker:"built the whole ambience from one lamp", storyteller:"the light sets the scene before anyone arrives", alchemist:"three wrong lamps somehow become perfect", guardian:"keeps things warm so others feel safe", rebel:"overhead lights are the enemy", mystic:"the glow here feels different and you know why", explorer:"collects moods from every room ever entered" } },
+  5: { title:"Comfort Maker of the Lune", skill:"turn any space into home", flavors:{ dreamer:"I build whole worlds under the covers.", visionary:"Mm… the softest place is where futures begin.", maker:"Ta-da… I make comfort out of almost nothing.", storyteller:"Shh… the best chapters happen lying down.", alchemist:"Ooh… I turn rest into quiet rebellion.", guardian:"Hey… I guard peace like\nit's my calling.", rebel:"Hmph… leaving was never required.", mystic:"Hmm… stillness speaks the clearest.", explorer:"Yay… I travel furthest without moving." } },
+  6: { title:"Duo Lune Purrrr", skill:"bond across any distance", flavors:{ dreamer:"Oh! I love you just because you're you!", visionary:"Yay! I knew you were mine first!", maker:"Hah! I built my whole day around you!", storyteller:"Wow! Every tiny whisker is a story!", alchemist:"Ah! You make even grumpy days feel cozy!", guardian:"Shh! I'll keep you safe, always!", rebel:"Oof! You do what you want and I love it!", mystic:"I sense your presence before a single sound reaches me.", explorer:"Yippee! Every corner of this world is ours!" } },
+  7: { title:"The Lune's Pitch Perfect", skill:"tune the frequency of a room", flavors:{ dreamer:"Hehe… every playlist is a feeling without words.", visionary:"Mm! I curate sound like a manifesto!", maker:"Ta-da! The playlist is the product!", storyteller:"Shh… each song is a chapter of me.", alchemist:"Ooh! I mix what shouldn't exist!", guardian:"Hey! I always know what you need to hear!", rebel:"Hmph! I never give up the aux!", mystic:"Hmm… I hear what others skip.", explorer:"Yay! Genres are just borders to cross!" } },
+  8: { title:"The Lune Grounder", skill:"ground everything around you", flavors:{ dreamer:"Shh, I quietly hold it all together.", visionary:"Ah, foundation is the real strategy.", maker:"Yes, every detail I placed on purpose.", storyteller:"Hmm… I'm not in the spotlight, but I keep Lune steady.", alchemist:"Ooh, I make mismatched things feel right.", guardian:"Hey, I hold the space for others to shine.", rebel:"Ha, sometimes the background steals the show.", mystic:"Hmm, the energy starts here.", explorer:"Ah, I rearrange every corner until it feels right." } },
+  9: { title:"Lune's Gardener", skill:"grow things that last", flavors:{ dreamer:"Oh! I tend quietly, hope loudly!", visionary:"Yay! Planting seeds for futures!", maker:"Hah! Keeping life alive, always!", storyteller:"Wow! Every leaf has a story!", alchemist:"Ah! Making dead things bloom again!", guardian:"Shh! Protecting growth before it shows!", rebel:"Oof! I grow in spots no one expects!", mystic:"Eek! Talking in whispers only plants hear!", explorer:"Yippee! Collecting life from every corner of the garden!" } },
+  10: { title:"Legend of the Fieldlune", skill:"kick beyond gravity", flavors:{ dreamer:"Every step feels like I'm dancing through stars.", visionary:"Heh, I see the goal first.", maker:"I rewrote gravity!", storyteller:"Oh? I write the win.", alchemist:"Mm… I turn mistakes into magic.", guardian:"Hey! Team first. Goals second. That's my motto!!", rebel:"Tch. Rules were made to break.", mystic:"Moves before others understand why.", explorer:"Ooh! I play beyond limits." } },
+  11: { title:"Guardian of Plushies on the Lune", skill:"protect softness", flavors:{ dreamer:"Hehe~ I hug plushies safe.", visionary:"Mm! I keep plushies' future bright!", maker:"Ta-da! I build plushie-safe zones!", storyteller:"Shh… I keep plushies' secrets.", alchemist:"Ooh! I turn fluff into armor!", guardian:"Hey! Stay back from my plushies!", rebel:"Hmph! I break rules for plushies!", mystic:"Hmm… I guard their hidden magic.", explorer:"Yayyy!! I found the lost plushies!!!" } },
+  12: { title:"The Lune's #1 Delulu Chef ⭐", skill:"manifest through flavor", flavors:{ dreamer:"Hehe~ I cook dreams into real bites!", visionary:"Mm! I design future flavors!", maker:"Ta-da! I turn ideas into dishes!", storyteller:"Shh… every bite tells a story.", alchemist:"Ooh! I manifest chaos into flavor!", guardian:"Hey! Eat first, I've got you!", rebel:"Hmph! I rewrite recipe rules!", mystic:"Hmm… I feed your soul, not just you.", explorer:"Yay! I taste every world!" } },
+  13: { title:"A Sipper of Lune Moments", skill:"hold what others pour out", flavors:{ dreamer:"Ah, the drink and mood match perfectly.", visionary:"Wow, I already know your order.", maker:"Yes, I tweak it until perfect.", storyteller:"Hmm, I always order the same thing.", alchemist:"Ooh, I only experiment, always.", guardian:"Hey, I order for everyone first.", rebel:"Ha, I was sipping oat milk before it was cool.", mystic:"Hmm, the drink chooses the day.", explorer:"Ah, I taste every version everywhere." } },
+  14: { title:"Story Weaver", skill:"live inside worlds others only read", flavors:{ dreamer:"fell in and never fully came back", visionary:"reads to understand futures not yet written", maker:"annotates everything, margins are the real story", storyteller:"cried at a plot twist and would do it again", alchemist:"absorbs five fictional universes simultaneously", guardian:"defends characters like they are real people", rebel:"skips to the end and still loves the whole thing", mystic:"knows the twist before the author reveals it", explorer:"every book is a world with its own rules" } },
+  15: { title:"The Lune's Memory Photographer", skill:"freeze what others forget", flavors:{ dreamer:"I capture feelings, not places.", visionary:"Mm! I shoot tomorrow, today!", maker:"Ta-da! The edit makes the magic!", storyteller:"Shh… every shot tells a story.", alchemist:"Ooh! I find magic in the ordinary!", guardian:"Hey! I keep your memories safe!", rebel:"Hmph! I shoot what others discard!", mystic:"Hmm… I capture energy more than light.", explorer:"I map the world, one shot!" } },
+};
 
-function calculateArchetype() {
-  const tagCounts = {};
-
+function calculateCosmicArchetype() {
+  const votes = {};
   state.packedItems.forEach(id => {
-    const item = ITEMS.find(i => i.id === id);
-    if (!item) return;
-    tagCounts[item.tag] = (tagCounts[item.tag] || 0) + 1;
+    const archetype = ITEM_ARCHETYPE_VOTE[id];
+    if (archetype) votes[archetype] = (votes[archetype] || 0) + 1;
   });
-
-  if (tagCounts['secret']) {
-    return ARCHETYPES.find(a => a.id === 'moonwalker');
+  let topArchetype = null, topCount = 0;
+  for (const [archetype, count] of Object.entries(votes)) {
+    if (count > topCount) { topCount = count; topArchetype = archetype; }
   }
-
-  let topTag = null, topCount = 0;
-  for (const [tag, count] of Object.entries(tagCounts)) {
-    if (count > topCount) {
-      topCount = count;
-      topTag = tag;
-    }
-  }
-
-  const match = ARCHETYPES.find(a => a.tags.includes(topTag));
-  return match || ARCHETYPES[0];
+  const item1Vote = ITEM_ARCHETYPE_VOTE[state.packedItems[0]];
+  if (item1Vote && votes[item1Vote] === topCount) topArchetype = item1Vote;
+  return topArchetype || "dreamer";
 }
 
-
-/* ─────────────────────────────────────────────
+/* ═══════════════════════════════════════════
    SECTION 8: GAME FLOW
-───────────────────────────────────────────── */
-
+═══════════════════════════════════════════ */
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
-
-const INTRO_LINES = [
-  "I'm leaving to Lune",
-  "in a few hours...",
-  "",
-  "but I haven't packed",
-  "my bag yet.",
-  "",
-  "I need to hurry.",
-];
-
+const INTRO_LINES = ["I'm leaving to Lune","in a few hours...","","but I haven't packed","my bag yet.","","I need to hurry."];
 const TYPING_SPEED_MS = 45;
-
 function initIntro() {
-  const textEl   = document.getElementById('intro-text');
-  const cursorEl = document.getElementById('dialog-cursor');
-  const hintEl   = document.getElementById('dialog-hint');
-
+  const textEl = document.getElementById('intro-text');
+  const hintEl = document.getElementById('dialog-hint');
   if (!textEl) return;
-
   const fullText = INTRO_LINES.join('\n');
-  let charIndex  = 0;
-  let skipToEnd  = false;
-
+  let charIndex = 0, skipToEnd = false;
   const skipHandler = () => { skipToEnd = true; };
-  document.getElementById('page-intro')
-    .addEventListener('click', skipHandler, { once: true });
-
+  document.getElementById('page-intro').addEventListener('click', skipHandler, { once: true });
   function typeNextChar() {
-    if (skipToEnd) {
-      const remaining = fullText.slice(charIndex);
-      textEl.innerHTML += remaining.replace(/\n/g, '<br>');
-      charIndex = fullText.length;
-      onTypingDone();
-      return;
-    }
-
-    if (charIndex >= fullText.length) {
-      onTypingDone();
-      return;
-    }
-
-    const char = fullText[charIndex];
-    charIndex++;
-
-    if (char === '\n') {
-      textEl.innerHTML += '<br>';
-    } else {
-      textEl.innerHTML += char === '<' ? '&lt;' : char === '>' ? '&gt;' : char;
-    }
-
-    const pause = '.…!?'.includes(char) ? TYPING_SPEED_MS * 6 : TYPING_SPEED_MS;
-    setTimeout(typeNextChar, pause);
+    if (skipToEnd) { textEl.innerHTML += fullText.slice(charIndex).replace(/\n/g, '<br>'); charIndex = fullText.length; onTypingDone(); return; }
+    if (charIndex >= fullText.length) { onTypingDone(); return; }
+    const char = fullText[charIndex++];
+    if (char === '\n') textEl.innerHTML += '<br>';
+    else textEl.innerHTML += char === '<' ? '&lt;' : char === '>' ? '&gt;' : char;
+    setTimeout(typeNextChar, '.…!?'.includes(char) ? TYPING_SPEED_MS * 6 : TYPING_SPEED_MS);
   }
-
   function onTypingDone() {
-    document.getElementById('page-intro')
-      .removeEventListener('click', skipHandler);
+    document.getElementById('page-intro').removeEventListener('click', skipHandler);
     hintEl.classList.remove('hidden');
-    document.getElementById('page-intro')
-      .addEventListener('click', startGame, { once: true });
+    document.getElementById('page-intro').addEventListener('click', startGame, { once: true });
   }
-
   setTimeout(typeNextChar, 400);
 }
-
 function startGame() {
-  showPage('page-room');
-  initCanvas();
-  setupInput();
-  setupDpad();
-
-  state.playerX = state.canvasW / 2;
-  state.playerY = state.canvasH * 0.7;
-
-  state.packedItems    = [];
-  state.dismissedItems = [];
-  state.activeItem     = null;
+  showPage('page-room'); initCanvas(); setupInput(); setupDpad();
+  state.playerX = state.canvasW / 2; state.playerY = state.canvasH * 0.7;
+  state.packedItems = []; state.dismissedItems = []; state.activeItem = null;
   clearPackSlots();
   document.getElementById('hint-window')?.classList.add('hidden');
   document.getElementById('btn-finish').classList.add('hidden');
   document.getElementById('hud-hint').textContent = 'Loading assets...';
-
   loadAllImages().then(() => {
     document.getElementById('hud-hint').textContent = 'Choose what matters most to you.';
     if (state.loopId) cancelAnimationFrame(state.loopId);
     gameLoop();
   });
 }
-
-function gameLoop() {
-  updatePlayer();
-  draw();
-  state.loopId = requestAnimationFrame(gameLoop);
-}
+function gameLoop() { updatePlayer(); draw(); state.loopId = requestAnimationFrame(gameLoop); }
 
 function finishPacking() {
   cancelAnimationFrame(state.loopId);
-
-  const archetype = calculateArchetype();
-
-  const grid = document.getElementById('chosen-items');
-  grid.innerHTML = '';
-  state.packedItems.forEach(id => {
-    const item = ITEMS.find(i => i.id === id);
-    if (!item) return;
-
-    const tile = document.createElement('div');
-    tile.className = 'pack-tile';
-
-    const imgKey = `item_${item.id}`;
-    if (IMAGES[imgKey]) {
-      const img = document.createElement('img');
-      img.src = IMAGES[imgKey].src;
-      img.alt = item.name;
-      img.className = 'pack-tile-img';
-      tile.appendChild(img);
-    } else {
-      const em = document.createElement('span');
-      em.className = 'pack-tile-emoji';
-      em.textContent = item.emoji;
-      tile.appendChild(em);
-    }
-
-    const label = document.createElement('span');
-    label.className = 'pack-tile-label';
-    label.textContent = item.name;
-
-    tile.appendChild(label);
-
-    grid.appendChild(tile);
-  });
-
-  showPage('page-result');
-  generateStars('stars2');
+  const firstItemId = state.packedItems[0];
+  const archetype = calculateCosmicArchetype();
+  const role = ITEM_TO_ROLE[firstItemId] || ITEM_TO_ROLE[11];
+  const flavor = role.flavors[archetype] || role.flavors["dreamer"];
+  document.getElementById('result-card-img').src = `assets/result/item_${firstItemId}.png`;
+  document.getElementById('cosmic-flavor').innerHTML = flavor.replace(/\n/g, '<br>');
+  if (!canvas || !ctx) { showPage('page-goodluck'); return; }
+  pixelDissolve(() => { showPage('page-goodluck'); });
 }
-
+function revealResult() { showPage('page-result'); }
+function pixelDissolve(onComplete) {
+  try {
+    const BLOCK = 8;
+    const cols = Math.ceil(canvas.width/BLOCK), rows = Math.ceil(canvas.height/BLOCK);
+    const total = cols * rows;
+    const indices = Array.from({ length: total }, (_, i) => i);
+    for (let i = indices.length-1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [indices[i],indices[j]] = [indices[j],indices[i]]; }
+    let filled = 0;
+    const SPD = Math.ceil(total / 40);
+    function dissolveFrame() {
+      try {
+        const batch = Math.min(SPD, total - filled);
+        for (let b = 0; b < batch; b++) {
+          const idx = indices[filled+b];
+          ctx.fillStyle = '#0d0d1a';
+          ctx.fillRect((idx%cols)*BLOCK, Math.floor(idx/cols)*BLOCK, BLOCK, BLOCK);
+        }
+        filled += batch;
+        if (filled < total) requestAnimationFrame(dissolveFrame); else onComplete();
+      } catch(e) { onComplete(); }
+    }
+    requestAnimationFrame(dissolveFrame);
+  } catch(e) { onComplete(); }
+}
 function restartGame() {
-  state.packedItems    = [];
-  state.dismissedItems = [];
-  state.activeItem     = null;
+  state.packedItems = []; state.dismissedItems = []; state.activeItem = null;
   clearPackSlots();
   document.getElementById('hint-window')?.classList.add('hidden');
-
   const textEl = document.getElementById('intro-text');
   const hintEl = document.getElementById('dialog-hint');
   if (textEl) textEl.innerHTML = '';
   if (hintEl) hintEl.classList.add('hidden');
-
-  showPage('page-intro');
-  initIntro();
+  showPage('page-intro'); initIntro();
 }
 
-
-/* ─────────────────────────────────────────────
-   SECTION 9: KEYBOARD & TOUCH INPUT
-───────────────────────────────────────────── */
-
+/* ═══════════════════════════════════════════
+   SECTION 9: INPUT
+═══════════════════════════════════════════ */
 function setupInput() {
   document.addEventListener('keydown', e => {
     state.keys[e.key] = true;
-    if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) {
-      e.preventDefault();
-    }
+    if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
     if (e.key === 'Escape') closePopup();
   });
-
-  document.addEventListener('keyup', e => {
-    state.keys[e.key] = false;
-  });
-
+  document.addEventListener('keyup', e => { state.keys[e.key] = false; });
   canvas.addEventListener('pointerdown', e => {
     if (state.activeItem !== null) return;
-
     const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width  / rect.width;
-    const scaleY = canvas.height / rect.height;
-    state.targetX = (e.clientX - rect.left) * scaleX;
-    state.targetY = (e.clientY - rect.top)  * scaleY;
+    state.targetX = (e.clientX - rect.left) * (canvas.width / rect.width);
+    state.targetY = (e.clientY - rect.top) * (canvas.height / rect.height);
   });
 }
+function setupDpad() {}
 
-function setupDpad() {
-  // D-pad hidden on mobile — click-to-walk used instead
-}
-
-
-/* ─────────────────────────────────────────────
-   SECTION 10: INSTAGRAM STORY CARD GENERATOR
-───────────────────────────────────────────── */
-
+/* ═══════════════════════════════════════════
+   SECTION 10: SAVE CARD GENERATOR
+   — CHANGE 3: Full rewrite with correct bg,
+     card image, flavor text, and Rubik watermark
+═══════════════════════════════════════════ */
 function downloadStoryCard() {
-  const shareCanvas = document.getElementById('share-canvas');
-  const sc = shareCanvas.getContext('2d');
-  sc.imageSmoothingEnabled = false;
-  const W = 1080, H = 1920;
+  // Capture exactly what's shown on the result page using html2canvas,
+  // then composite it onto a full 9:16 canvas with background + watermark.
 
-  // Draw result background image (same as result page)
-  if (IMAGES.result_bg) {
-    // Scale the background to fill the full story card canvas
-    sc.drawImage(IMAGES.result_bg, 0, 0, W, H);
-  } else {
-    // Fallback: solid dark background if image didn't load
-    const bg = sc.createLinearGradient(0, 0, 0, H);
-    bg.addColorStop(0,   '#0d0d1a');
-    bg.addColorStop(0.4, '#1a1050');
-    bg.addColorStop(1,   '#0d0d1a');
-    sc.fillStyle = bg;
-    sc.fillRect(0, 0, W, H);
-  }
+  const cardInner = document.getElementById('page-result');
+  if (!cardInner) return;
 
-  const boxX = 180, boxY = 560, boxW = 720, boxH = 760;
-  const tbarH = 70;
+  // Show a quick loading indicator on the button
+  const btn = document.querySelector('.result-btns .btn-pixel');
+  const origText = btn ? btn.textContent : '';
+  if (btn) btn.textContent = '...';
 
-  sc.fillStyle = '#edf1ef';
-  sc.fillRect(boxX, boxY, boxW, boxH);
-  sc.strokeStyle = '#6b7280';
-  sc.lineWidth = 6;
-  sc.strokeRect(boxX, boxY, boxW, boxH);
+  // Hide buttons before capture
+  const btnsEl = document.querySelector('#page-result .result-btns');
+  if (btnsEl) btnsEl.style.visibility = 'hidden';
 
-  sc.fillStyle = '#969eb5';
-  sc.fillRect(boxX, boxY, boxW, tbarH);
+  html2canvas(cardInner, {
+    useCORS: true,
+    allowTaint: true,
+    backgroundColor: null,
+    scale: 2,
+    logging: false,
+  }).then(captured => {
+    // Restore buttons
+    if (btnsEl) btnsEl.style.visibility = '';
+    // Build final 1080×1920 share canvas
+    const shareCanvas = document.getElementById('share-canvas');
+    const sc = shareCanvas.getContext('2d');
+    sc.imageSmoothingEnabled = false;
+    const W = 1080, H = 1920;
 
-  sc.fillStyle = '#f0f0f0';
-  sc.font = 'bold 32px "Courier New", monospace';
-  sc.textAlign = 'left';
-  sc.fillText('PACKING', boxX + 24, boxY + 44);
-
-  const btnSize = 44;
-  const btnY = boxY + (tbarH - btnSize) / 2;
-  ['─','□','✕'].forEach((label, i) => {
-    const bx = boxX + boxW - (3 - i) * (btnSize + 6) - 10;
-    sc.fillStyle = '#9b9fb8';
-    sc.fillRect(bx, btnY, btnSize, btnSize);
-    sc.strokeStyle = '#1a1a1a';
-    sc.lineWidth = 2;
-    sc.strokeRect(bx, btnY, btnSize, btnSize);
-    sc.fillStyle = '#1a1a1a';
-    sc.font = '20px "Courier New", monospace';
-    sc.textAlign = 'center';
-    sc.fillText(label, bx + btnSize/2, btnY + btnSize/2 + 7);
-  });
-
-  const padding = 40;
-  const gridX = boxX + padding;
-  const gridY = boxY + tbarH + padding;
-  const gridW = boxW - padding * 2;
-  const gridH = boxH - tbarH - padding * 2;
-  const cellW = (gridW - padding) / 2;
-  const cellH = (gridH - padding) / 2;
-
-  state.packedItems.forEach((id, idx) => {
-    const item = ITEMS.find(i => i.id === id);
-    if (!item) return;
-
-    const col = idx % 2;
-    const row = Math.floor(idx / 2);
-    const cx = gridX + col * (cellW + padding);
-    const cy = gridY + row * (cellH + padding);
-
-    sc.fillStyle = '#d5d7e7';
-    sc.fillRect(cx, cy, cellW, cellH);
-    sc.strokeStyle = '#1a1a1a';
-    sc.lineWidth = 4;
-    sc.strokeRect(cx, cy, cellW, cellH);
-
-    const imgKey = `item_${item.id}`;
-    if (IMAGES[imgKey]) {
-      const iw = IMAGES[imgKey].naturalWidth  || IMAGES[imgKey].width;
-      const ih = IMAGES[imgKey].naturalHeight || IMAGES[imgKey].height;
-      const maxS = Math.min(cellW, cellH) * 0.65;
-      let dw, dh;
-      if (iw >= ih) { dw = maxS; dh = maxS * (ih/iw); }
-      else           { dh = maxS; dw = maxS * (iw/ih); }
-      sc.drawImage(IMAGES[imgKey],
-        cx + (cellW - dw)/2,
-        cy + (cellH - dh)/2 - 20,
-        dw, dh);
-    }
-
-    sc.fillStyle = '#2a2a3a';
-    sc.font = 'bold 22px "Courier New", monospace';
-    sc.textAlign = 'center';
-    sc.fillText(item.name, cx + cellW/2, cy + cellH - 20);
-  });
-
-  sc.fillStyle = '#a09cbb';
-  sc.font = '32px "Press Start 2P", monospace';
-  sc.textAlign = 'center';
-  sc.fillText('CONYCORN team', W/2, H - 50);
-
-  const link = document.createElement('a');
-  link.download = 'pack-for-lune.png';
-  link.href = shareCanvas.toDataURL('image/png');
-  link.click();
-}
-
-function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-  const words = text.split(' ');
-  let line = '';
-  let currentY = y;
-
-  for (let n = 0; n < words.length; n++) {
-    const testLine = line + words[n] + ' ';
-    const metrics  = ctx.measureText(testLine);
-    if (metrics.width > maxWidth && n > 0) {
-      ctx.fillText(line, x, currentY);
-      line = words[n] + ' ';
-      currentY += lineHeight;
+    // 1. Background
+    if (IMAGES.result_bg) {
+      sc.drawImage(IMAGES.result_bg, 0, 0, W, H);
     } else {
-      line = testLine;
+      sc.fillStyle = '#0d0d1a';
+      sc.fillRect(0, 0, W, H);
     }
-  }
-  ctx.fillText(line, x, currentY);
+
+    // 2. Draw the captured result page, centered, scaled to fit width
+    const capAspect = captured.height / captured.width;
+    const drawW = W;
+    const drawH = drawW * capAspect;
+    const drawY = (H - drawH) / 2;
+    sc.drawImage(captured, 0, drawY, drawW, drawH);
+
+    // 3. Watermark — bottom center, Rubik 500, semi-transparent white
+    sc.font      = '500 28px "Rubik", sans-serif';
+    sc.fillStyle = 'rgba(255, 255, 255, 0.85)';
+    sc.textAlign = 'center';
+    sc.fillText('@conycorn.studio', W / 2, H - 60);
+
+    // 4. Download
+    const link    = document.createElement('a');
+    link.download = 'pack-for-lune.png';
+    link.href     = shareCanvas.toDataURL('image/png');
+    link.click();
+
+    // Restore button
+    if (btn) btn.textContent = origText;
+
+  }).catch(err => {
+    console.error('html2canvas error:', err);
+    if (btnsEl) btnsEl.style.visibility = '';
+    if (btn) btn.textContent = origText;
+  });
 }
 
-
-/* ─────────────────────────────────────────────
-   SECTION 11: DECORATIVE EFFECTS
-───────────────────────────────────────────── */
-
+/* ═══════════════════════════════════════════
+   SECTION 11: EFFECTS
+═══════════════════════════════════════════ */
 function generateStars(containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
   container.innerHTML = '';
-
   for (let i = 0; i < 80; i++) {
     const star = document.createElement('div');
     star.className = 'star';
-    star.style.cssText = `
-      left:  ${Math.random() * 100}%;
-      top:   ${Math.random() * 100}%;
-      width: ${Math.random() * 3 + 1}px;
-      height: ${Math.random() * 3 + 1}px;
-      --dur:   ${Math.random() * 3 + 2}s;
-      --delay: ${Math.random() * 4}s;
-    `;
+    star.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${Math.random()*3+1}px;height:${Math.random()*3+1}px;--dur:${Math.random()*3+2}s;--delay:${Math.random()*4}s;`;
     container.appendChild(star);
   }
 }
 
-
-/* ─────────────────────────────────────────────
-   SECTION 12: INITIALIZATION
-───────────────────────────────────────────── */
-
+/* ═══════════════════════════════════════════
+   SECTION 12: INIT
+═══════════════════════════════════════════ */
 initIntro();
-
 function checkOrientation() {
   const rotateMsg = document.getElementById('rotate-msg');
   if (!rotateMsg) return;
-
   const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-  const isLandscape    = window.innerWidth > window.innerHeight;
-
-  if (isTouchDevice && isLandscape) {
-    rotateMsg.style.display = 'flex';
-  } else {
-    rotateMsg.style.display = 'none';
-  }
+  const isLandscape = window.innerWidth > window.innerHeight;
+  rotateMsg.style.display = (isTouchDevice && isLandscape) ? 'flex' : 'none';
 }
-
 checkOrientation();
-window.addEventListener('resize',            checkOrientation);
+window.addEventListener('resize', checkOrientation);
 window.addEventListener('orientationchange', checkOrientation);
 </script>
 </body>
