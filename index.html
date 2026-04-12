@@ -449,20 +449,23 @@ const ARCHETYPES = {
 };
 
 const QUESTIONS = [
+  // Q1 — added Explorer to option E
   { q:'"ON LUNE 🌕, WHO WOULD BE THE FIRST PERSON YOU THINK OF?"', opts:[
     {k:'A',t:'My best friend or partner',                      s:{Storyteller:1,Guardian:1}},
     {k:'B',t:'A mentor or icon who inspires me',               s:{Visionary:1,Alchemist:1}},
     {k:'C',t:'My younger self',                                s:{Dreamer:1,Maker:1}},
     {k:'D',t:'My family or beloved pet',                       s:{Guardian:1,Storyteller:1}},
-    {k:'E',t:'No one — I look toward the future',              s:{Visionary:1,Rebel:1}},
+    {k:'E',t:'No one — I look toward the future',              s:{Visionary:1,Rebel:1,Explorer:1}}, // + Explorer
   ]},
+  // Q2 — added Rebel to Iced Americano (bold/intense), Mystic to Matcha (introspective)
   { q:'"WHICH DRINK WOULD YOU MISS THE MOST ON EAU🌏?"', opts:[
     {k:'A',t:'Latte',               s:{Maker:1}},
-    {k:'B',t:'Matcha',              s:{Dreamer:1}},
-    {k:'C',t:'Sparkling Yuzu Soda', s:{Alchemist:1}},
-    {k:'D',t:'Iced Americano',      s:{Visionary:1}},
+    {k:'B',t:'Matcha',              s:{Dreamer:1,Mystic:1}},   // + Mystic
+    {k:'C',t:'Sparkling Yuzu Soda', s:{Alchemist:1,Explorer:1}}, // + Explorer
+    {k:'D',t:'Iced Americano',      s:{Visionary:1,Rebel:1}}, // + Rebel
     {k:'E',t:'Thai Tea',            s:{Storyteller:1}},
   ]},
+  // Q3 — no change, already has Rebel + Explorer + Mystic
   { q:'"BEFORE LUNE🌕, HOW WOULD YOU DESCRIBE YOUR JOURNEY ON EAU🌏?"', opts:[
     {k:'A',t:'A chapter of quiet regrets — carrying what-ifs you never voiced', s:{Mystic:1,Guardian:1}},
     {k:'B',t:'A season of drifting — moving, but unsure of direction',           s:{Dreamer:1,Explorer:1}},
@@ -470,46 +473,53 @@ const QUESTIONS = [
     {k:'D',t:'A healing tide — letting go slowly, finding space to breathe',     s:{Storyteller:1,Guardian:1}},
     {k:'E',t:"A restless spark — knowing you're meant for more",                 s:{Rebel:1,Explorer:1}},
   ]},
+  // Q4 — added Rebel to option D (marking the path = claiming territory)
   { q:'"WHEN YOU FIRST SET FOOT ON LUNE🌕, THE SOIL GLOWS UNDER YOUR STEP. WHAT DO YOU DO NEXT?"', opts:[
     {k:'A',t:'Collect the glowing dust to study it later',  s:{Maker:1,Alchemist:1}},
     {k:'B',t:'Draw a symbol with your fingertip',           s:{Storyteller:1,Dreamer:1}},
     {k:'C',t:'Look up — something calls from the sky',      s:{Visionary:1,Mystic:1}},
-    {k:'D',t:'Mark a safe path for whoever lands next',     s:{Guardian:1}},
+    {k:'D',t:'Mark a safe path for whoever lands next',     s:{Guardian:1,Explorer:1}}, // + Explorer
   ]},
+  // Q5 — no change, already has Rebel + Explorer
   { q:'"WHAT\'S YOUR PLAN ON LUNE🌕?"', opts:[
     {k:'A',t:'I miss my home. I want to go back to EAU', s:{Guardian:1,Storyteller:1}},
     {k:'B',t:"I'll take a leap and stay awhile",         s:{Alchemist:1,Visionary:1}},
     {k:'C',t:'I want to explore every crater and secret',s:{Dreamer:1,Explorer:1}},
     {k:'D',t:"I'll build a new world here",              s:{Maker:1,Rebel:1}},
   ]},
+  // Q6 — added Rebel to option A (defiant new light), Explorer to option C
   { q:'"A VOICE FROM EAU🌏 ECHOES: \'WHAT DO YOU WISH TO BRING BACK?\'"', opts:[
-    {k:'A',t:'A seed of new light, to plant on EAU',       s:{Alchemist:1,Visionary:1}},
+    {k:'A',t:'A seed of new light, to plant on EAU',       s:{Alchemist:1,Visionary:1,Rebel:1}}, // + Rebel
     {k:'B',t:'A melody from the stars',                    s:{Storyteller:1,Dreamer:1}},
-    {k:'C',t:"The formula of LUNE's air — it feels alive", s:{Maker:1,Alchemist:1}},
+    {k:'C',t:"The formula of LUNE's air — it feels alive", s:{Maker:1,Alchemist:1,Explorer:1}}, // + Explorer
     {k:'D',t:'The strength I found in silence',            s:{Mystic:1,Guardian:1}},
   ]},
+  // Q7 — added Rebel to option B (workshop = disrupting/creating), Explorer to option C
   { q:'"UNDER LUNE🌕\'S QUIET LIGHT, WHAT DO YOU WISH TO BUILD OR BECOME?"', opts:[
     {k:'A',t:'A bridge of light connecting wanderers who feel lost', s:{Storyteller:1,Guardian:1}},
-    {k:'B',t:'A workshop that crafts dreams into reality',           s:{Maker:1,Alchemist:1}},
-    {k:'C',t:'A tower that watches the shifting stars',              s:{Visionary:1}},
+    {k:'B',t:'A workshop that crafts dreams into reality',           s:{Maker:1,Alchemist:1,Rebel:1}}, // + Rebel
+    {k:'C',t:'A tower that watches the shifting stars',              s:{Visionary:1,Explorer:1}},      // + Explorer
     {k:'D',t:'A garden of moons where ideas can bloom',              s:{Dreamer:1,Mystic:1}},
   ]},
+  // Q8 — added Rebel to option B (new plan when old collapses), Explorer to option C
   { q:'"THE PATH TO YOUR DREAM FADES IN THE DARK. HOW WILL YOU KEEP MOVING FORWARD?"', opts:[
     {k:'A',t:'Trust the rhythm inside me — one step at a time',         s:{Dreamer:1,Storyteller:1}},
-    {k:'B',t:'Sketch a new plan when the old one collapses',             s:{Maker:1,Alchemist:1}},
-    {k:'C',t:'Light a torch for others to see their way',                s:{Visionary:1,Guardian:1}},
+    {k:'B',t:'Sketch a new plan when the old one collapses',             s:{Maker:1,Alchemist:1,Rebel:1}}, // + Rebel
+    {k:'C',t:'Light a torch for others to see their way',                s:{Visionary:1,Guardian:1,Explorer:1}}, // + Explorer
     {k:'D',t:'Listen to the silence — it always whispers the next move', s:{Mystic:1,Dreamer:1}},
   ]},
+  // Q9 (mini event) — no change, already has Rebel + Explorer
   { q:'WHAT DO YOU DO?', isEvent:true, opts:[
     {k:'A',t:'Shield myself and wait for it to pass',    s:{Guardian:1}},
     {k:'B',t:'Run forward, trusting my instincts',       s:{Explorer:1,Rebel:1}},
     {k:'C',t:'Study the falling pattern to find a path', s:{Visionary:1,Maker:1}},
-    {k:'D',t:'Use a nearby crystal to create a barrier', s:{Alchemist:1}},
+    {k:'D',t:'Use a nearby crystal to create a barrier', s:{Alchemist:1,Mystic:1}}, // + Mystic
   ]},
+  // Q10 — added Rebel to option C (map = charting new territory boldly)
   { q:'"BEFORE RETURNING, YOU MAY LEAVE ONE SIGN ON LUNE🌕. WHAT WOULD IT BE?"', opts:[
     {k:'A',t:'A luminous sculpture that hums in the wind',     s:{Maker:1,Storyteller:1}},
     {k:'B',t:'A written vow carved into stone',                s:{Guardian:1,Storyteller:1}},
-    {k:'C',t:'A map guiding others toward the unknown horizon',s:{Explorer:1,Visionary:1}},
+    {k:'C',t:'A map guiding others toward the unknown horizon',s:{Explorer:1,Visionary:1,Rebel:1}}, // + Rebel
     {k:'D',t:'Nothing — my presence here is enough',          s:{Mystic:1,Dreamer:1}},
   ]},
 ];
